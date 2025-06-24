@@ -1,0 +1,95 @@
+name: Release Binaries
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write  # Required for uploading release assets
+
+jobs:
+  build:
+    name: Build installers only
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            name: linux-x86_64
+
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            name: macos-x86_64
+
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            name: windows-x86_64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+
+      - name: Add Rust target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install JSCoreGTK 4.0
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update && sudo apt --fix-missing install
+          sudo apt-get install -y libjavascriptcoregtk-4.1-0 libjavascriptcoregtk-4.1-dev
+
+      - name: Install system dependencies for Tauri
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.0-dev \
+            libayatana-appindicator3-dev \
+            libsoup-3.0-dev \
+            build-essential \
+            curl \
+            pkg-config \
+            libssl-dev \
+            webkit2gtk-4.1-dev
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-tauri
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --force
+
+      - name: Build Tauri app
+        run: cargo tauri build --target ${{ matrix.target }}
+
+      - name: Copy installer to dist/
+        shell: bash
+        run: |
+          mkdir -p dist
+
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            cp target/${{ matrix.target }}/release/bundle/dmg/*.dmg dist/
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
+            cp target/${{ matrix.target }}/release/bundle/msi/*.msi dist/
+          elif [[ "${{ runner.os }}" == "Linux" ]]; then
+            cp target/${{ matrix.target }}/release/bundle/appimage/*.AppImage dist/
+            # or use .deb if preferred:
+            # cp target/${{ matrix.target }}/release/bundle/deb/*.deb dist/
+          fi
+
+      - name: Upload installer
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
