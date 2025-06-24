@@ -22,7 +22,7 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 
 ![Rust](https://img.shields.io/badge/built_with-rust-orange)
 ![MadeWithTauri](https://img.shields.io/badge/ui-tauri-8d64c0?logo=tauri&logoColor=white)
-![Aether Core](https://img.shields.io/badge/gifmeta--gui--core-blue)
+![Aether Core](https://img.shields.io/badge/gifmeta--gui-blue)
 [![SacredAI](https://img.shields.io/badge/powered%20by-%F0%9F%95%8A%EF%B8%8F%20Sacred%20AI-lightgrey?style=flat-square)](https://sacre-ai.com)
 
 ---
