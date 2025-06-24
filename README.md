@@ -6,6 +6,10 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 > Edit loop counts, frame delays, and gain creative control over your GIFs — all in a clean native GUI.  
 > Powered by the [gifmeta](https://crates.io/crates/gifmeta) Rust crate.
 
+![Version](https://img.shields.io/badge/version-0.1.0-lightgrey)
+[![CI](https://img.shields.io/github/actions/workflow/status/madspaaskesen/gifmeta-gui/ci.yml?style=flat-square)](https://github.com/madspaaskesen/gifmeta-gui)
+![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-green)
+
 ---
 
 ## 🚀 Features
@@ -15,6 +19,11 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 - 🛠️ Tweak settings (planned)
 - 🌒 Dark-themed native UI
 - 💨 Ultra-fast thanks to Rust backend via Tauri
+
+![Rust](https://img.shields.io/badge/built_with-rust-orange)
+![MadeWithTauri](https://img.shields.io/badge/ui-tauri-8d64c0?logo=tauri&logoColor=white)
+![Aether Core](https://img.shields.io/badge/gifmeta--gui--core-blue)
+[![SacredAI](https://img.shields.io/badge/powered%20by-%F0%9F%95%8A%EF%B8%8F%20Sacred%20AI-lightgrey?style=flat-square)](https://sacre-ai.com)
 
 ---
 
