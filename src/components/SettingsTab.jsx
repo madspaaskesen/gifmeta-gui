@@ -1,58 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
-export default function SettingsTab({ metadata, setMetadata, applyGlobalDelayToAll }) {
-  const [globalDelay, setGlobalDelay] = useState(0);
-  const [loopCount, setLoopCount] = useState(metadata?.loop_count ?? 0);
+export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, setDefaultDelay, applyGlobalDelayToAll }) {
   const [applyToAll, setApplyToAll] = useState(false);
-
-  useEffect(() => {
-    if (metadata?.frames?.length > 0) {
-        const defaultDelay = findMostCommonDelay(metadata.frames);
-        setGlobalDelay(defaultDelay);
-    }
-  }, [metadata]);
-
-  function findMostCommonDelay(frames) {
-    const countMap = {};
-
-    frames.forEach((frame) => {
-        const delay = frame.delay_cs || 0;
-        countMap[delay] = (countMap[delay] || 0) + 1;
-    });
-
-    let mostCommon = 0;
-    let highestCount = 0;
-
-    for (const [delay, count] of Object.entries(countMap)) {
-        if (count > highestCount) {
-        mostCommon = parseInt(delay, 10);
-        highestCount = count;
-        }
-    }
-
-    return mostCommon;
-  }
 
   const handleDelayChange = (e) => {
     const value = parseInt(e.target.value, 10) || 0;
-    setGlobalDelay(value);
-
-    const updatedMetadata = { ...metadata, total_duration_cs: value };
-
-    if (applyToAll) {
-        updatedMetadata.frames = metadata.frames.map((f) => ({
-        ...f,
-        delay_cs: value,
-        }));
-    }
-
-    setMetadata(updatedMetadata);
+    setDefaultDelay(value);
   };
 
   const handleLoopChange = (e) => {
     const value = parseInt(e.target.value, 10) || 0;
     setLoopCount(value);
-    setMetadata({ ...metadata, loop_count: value });
   };
 
   function setTheme(theme) {
@@ -68,7 +26,7 @@ export default function SettingsTab({ metadata, setMetadata, applyGlobalDelayToA
         <input
           type="number"
           className="input input-bordered w-full max-w-xs"
-          value={globalDelay}
+          value={defaultDelay}
           onChange={handleDelayChange}
         />
         <div className="mt-2">

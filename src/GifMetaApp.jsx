@@ -10,6 +10,19 @@ function GifMetaApp() {
   const [metadata, setMetadata] = useState(null);
   const [status, setStatus]   = useState("Ready");
   const [selectedFrame, setSelectedFrame] = useState(null);
+  const [defaultDelay, setDefaultDelay] = useState(0);
+  const [loopCount, setLoopCount] = useState(0);
+  const [inputPath, setInputPath] = useState('');
+  const [outputPath, setOutputPath] = useState('');
+
+  function getMostCommonDelay(frames) {
+    const counts = {};
+    for (const frame of frames) {
+      counts[frame.delay_cs] = (counts[frame.delay_cs] || 0) + 1;
+    }
+    const [mostCommon] = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    return parseInt(mostCommon[0]);
+  }
 
   const handleSelect = async () => {
     const path = await open({
@@ -17,9 +30,20 @@ function GifMetaApp() {
     });
     if (!path) return;
 
+    setInputPath(path);
     setStatus("Loading…");
+
+    // Auto-suggest output path (same folder, different file name)
+    const inputFile = path.split('/').pop(); // e.g., image.gif
+    const dir = path.replace(`/${inputFile}`, '');
+    const baseName = inputFile.replace(/\.gif$/i, '');
+
+    setOutputPath(`${dir}/${baseName}_modified.gif`);
+
     try {
       const meta = await invoke("get_info", { path });
+      setDefaultDelay(getMostCommonDelay(meta.frames));
+      setLoopCount(meta.loop_count ?? 0)
       setMetadata(meta);
       setStatus("Loaded metadata ✔");
     } catch (err) {
@@ -29,14 +53,17 @@ function GifMetaApp() {
   };
 
   async function saveGif() {
+    const allSame = metadata.frames.every(f => f.delay_cs === defaultDelay);
+    const changedLoop = loopCount !== metadata.loop_count;
+
     try {
       await invoke('save_modified_gif', {
-        inputPath: metadata.source_path, // or wherever it's stored
-        outputPath: null,                // or a custom output
-        loopCount: metadata.loop_count,
-        delayAll: null,                  // only if you want to apply same delay to all
-        delays: Object.fromEntries(
-          metadata.frames.map((f) => [f.index, f.delay_cs])
+        inputPath: inputPath,
+        outputPath: outputPath,
+        loopCount: changedLoop ? loopCount : null,
+        delayAll: allSame ? defaultDelay : null,
+        delays: allSame ? null : Object.fromEntries(
+          metadata.frames.map(f => [f.index, f.delay_cs])
         ),
       });
       alert("✅ GIF saved!");
@@ -105,12 +132,12 @@ function GifMetaApp() {
 
             <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
-              <SettingsTab metadata={metadata} setMetadata={setMetadata} />
+              <SettingsTab metadata={metadata} setMetadata={setMetadata} loopCount={loopCount} setLoopCount={setLoopCount} defaultDelay={defaultDelay} setDefaultDelay={setDefaultDelay} />
             </div>
 
             <input type="radio" name="my_tabs" className="tab" aria-label="💾 Save" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
-              <SaveTab metadata={null} outputPath={null} setOutputPath={null} onSave={null} />
+              <SaveTab metadata={metadata} outputPath={outputPath} setOutputPath={setOutputPath} onSave={saveGif} />
             </div>
           </div>
         </div>
