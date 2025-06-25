@@ -1537,9 +1537,9 @@ dependencies = [
 
 [[package]]
 name = "gifmeta"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b542a6a4415f7d07bacfb38c061588823cd3b428513490c3cdc3a1c04301148d"
+checksum = "546f13756e60a7639bae15d1d688e32b11ea67cf3e03886b9a913886f87d52cd"
 dependencies = [
  "base64 0.22.1",
  "clap",
