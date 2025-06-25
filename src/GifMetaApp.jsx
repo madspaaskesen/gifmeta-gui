@@ -13,6 +13,7 @@ function GifMetaApp() {
   const [selectedFrame, setSelectedFrame] = useState(null);
   const [defaultDelay, setDefaultDelay] = useState(0);
   const [loopCount, setLoopCount] = useState(0);
+  const [applyToAll, setApplyToAll] = useState(false);
   const [inputPath, setInputPath] = useState('');
   const [outputPath, setOutputPath] = useState('');
 
@@ -33,6 +34,14 @@ function GifMetaApp() {
 
     const statusMsg = `📁 ${shortName} · Duration: ${totalDuration}cs · Loops: ${loopCount} · Frames: ${metadata.frames.length} · ✔`;
     setStatus(statusMsg);
+
+    if (selectedFrame !== null && metadata.frames) {
+      const updated = metadata.frames.find(f => f.index === selectedFrame.index);
+      if (updated) {
+        setSelectedFrame(updated);
+      }
+    }
+
   }, [metadata?.frames, inputPath, loopCount, defaultDelay]);
 
   function shortenFilename(name, maxLength = 25) {
@@ -61,6 +70,7 @@ function GifMetaApp() {
     if (!path) return;
 
     setInputPath(path);
+    setApplyToAll(false);
     setStatus("Loading…");
 
     // Auto-suggest output path (same folder, different file name)
@@ -147,7 +157,10 @@ function GifMetaApp() {
 
             <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
-              <SettingsTab metadata={metadata} setMetadata={setMetadata} loopCount={loopCount} setLoopCount={setLoopCount} defaultDelay={defaultDelay} setDefaultDelay={setDefaultDelay} />
+              <SettingsTab metadata={metadata} setMetadata={setMetadata} 
+                loopCount={loopCount} setLoopCount={setLoopCount} 
+                defaultDelay={defaultDelay} setDefaultDelay={setDefaultDelay} 
+                applyToAll={applyToAll} setApplyToAll={setApplyToAll}/>
             </div>
 
             <input type="radio" name="my_tabs" className="tab" aria-label="🧠 JSON" />

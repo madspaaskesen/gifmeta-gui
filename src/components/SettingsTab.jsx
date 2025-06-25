@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
-export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, setDefaultDelay, applyGlobalDelayToAll }) {
-  const [applyToAll, setApplyToAll] = useState(false);
-
+export default function SettingsTab({ metadata, setMetadata, loopCount, setLoopCount, defaultDelay, setDefaultDelay, applyToAll, setApplyToAll }) {
   const handleDelayChange = (e) => {
     const value = parseInt(e.target.value, 10) || 0;
     setDefaultDelay(value);
@@ -11,6 +9,16 @@ export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, set
   const handleLoopChange = (e) => {
     const value = parseInt(e.target.value, 10) || 0;
     setLoopCount(value);
+  };
+
+  const applyToAllChange = (e) => {
+    if (!applyToAll) {
+      const updatedFrames = metadata.frames.map((f) =>
+        f.index >= 0 ? { ...f, delay: delay_cs } : f
+      );
+      setMetadata({ ...metadata, frames: updatedFrames });
+    }
+    setApplyToAll(!applyToAll);
   };
 
   function setTheme(theme) {
@@ -33,10 +41,17 @@ export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, set
               type="checkbox"
               className="checkbox checkbox-sm"
               checked={applyToAll}
-              onChange={() => setApplyToAll(!applyToAll)}
+              onChange={(e) => setApplyToAll(e.target.checked)}
             />
             <span className="label-text ml-2">Apply to all frames</span>
           </label>
+          {applyToAll && (
+            <button className="btn btn-sm" onClick={() => {
+              setMetadata({ ...metadata, frames: metadata.frames.map(f => ({ ...f, delay_cs: defaultDelay }))});
+            }}>
+              ↺ Apply Now
+            </button>
+          )}
         </p>
       </fieldset>
 
