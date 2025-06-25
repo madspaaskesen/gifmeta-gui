@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from '@tauri-apps/plugin-dialog';
 import FrameViewer from "./components/FrameViewer";
 import SettingsTab from "./components/SettingsTab";
 import SaveTab from "./components/SaveTab";
+import AboutTab from "./components/AboutTab";
 import "./GifMetaApp.css";
 
 function GifMetaApp() {
@@ -14,6 +15,34 @@ function GifMetaApp() {
   const [loopCount, setLoopCount] = useState(0);
   const [inputPath, setInputPath] = useState('');
   const [outputPath, setOutputPath] = useState('');
+
+  useEffect(() => {
+    if (!metadata?.frames || !inputPath) {
+      setStatus("Status: Ready");
+      return;
+    }
+
+    const file = inputPath.split("/").pop() || "";
+    const shortName = shortenFilename(file);
+
+    // Total duration: sum of frame delays OR fallback to defaultDelay
+    const totalDuration = metadata.frames.reduce((sum, frame) => {
+      return sum + (frame.delay_cs ?? defaultDelay ?? 0);
+    }, 0);
+
+    const statusMsg = `📁 ${shortName} · Duration: ${totalDuration}cs · Loops: ${loopCount} · Frames: ${metadata.frames.length} · ✔`;
+    setStatus(statusMsg);
+  }, [metadata?.frames, inputPath, loopCount, defaultDelay]);
+
+  function shortenFilename(name, maxLength = 25) {
+    const extIndex = name.lastIndexOf(".");
+    const ext = extIndex !== -1 ? name.slice(extIndex) : "";
+    const base = extIndex !== -1 ? name.slice(0, extIndex) : name;
+
+    return base.length > maxLength
+      ? base.slice(0, maxLength) + "…" + ext
+      : name;
+  }
 
   function getMostCommonDelay(frames) {
     const counts = {};
@@ -115,6 +144,11 @@ function GifMetaApp() {
               <FrameViewer frame={selectedFrame} setFrame={setSelectedFrame} metadata={metadata} setMetadata={setMetadata} />
             </div>
 
+            <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />
+            <div className="tab-content bg-base-100 border-base-300 p-6">
+              <SettingsTab metadata={metadata} setMetadata={setMetadata} loopCount={loopCount} setLoopCount={setLoopCount} defaultDelay={defaultDelay} setDefaultDelay={setDefaultDelay} />
+            </div>
+
             <input type="radio" name="my_tabs" className="tab" aria-label="🧠 JSON" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               {metadata ? (
@@ -130,14 +164,14 @@ function GifMetaApp() {
               )}
             </div>
 
-            <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />
-            <div className="tab-content bg-base-100 border-base-300 p-6">
-              <SettingsTab metadata={metadata} setMetadata={setMetadata} loopCount={loopCount} setLoopCount={setLoopCount} defaultDelay={defaultDelay} setDefaultDelay={setDefaultDelay} />
-            </div>
-
             <input type="radio" name="my_tabs" className="tab" aria-label="💾 Save" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               <SaveTab metadata={metadata} outputPath={outputPath} setOutputPath={setOutputPath} onSave={saveGif} />
+            </div>
+
+            <input type="radio" name="my_tabs" className="tab" aria-label="🧩 About" />
+            <div className="tab-content bg-base-100 border-base-300 p-6">
+              <AboutTab />
             </div>
           </div>
         </div>
