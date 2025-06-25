@@ -141,7 +141,7 @@ function GifMetaApp() {
           <div className="tabs tabs-lift">
             <input type="radio" name="my_tabs" className="tab" aria-label="🖼️ Viewer" defaultChecked />
             <div className="tab-content bg-base-100 border-base-300 p-6">
-              <FrameViewer frame={selectedFrame} setFrame={setSelectedFrame} metadata={metadata} setMetadata={setMetadata} />
+              <FrameViewer frame={selectedFrame} setFrame={setSelectedFrame} metadata={metadata} setMetadata={setMetadata} inputPath={inputPath} />
             </div>
 
             <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />

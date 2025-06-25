@@ -16,9 +16,18 @@ fn get_info(path: String) -> Result<gifmeta::gifmeta_structs::GifMetadata, Strin
 
 #[tauri::command]
 fn get_frame(path: String, frame: usize) -> Result<Vec<u8>, String> {
-    //use std::path::PathBuf;
-    //let path_buf = PathBuf::from(path);
-    gifmeta::get_frame_image(path, frame).map_err(|e| e.to_string())
+    println!("📦 get_frame called with path: {}, frame: {}", path, frame);
+
+    match gifmeta::get_frame_image(path, frame) {
+        Ok(data) => {
+            println!("✅ Frame image extracted, bytes: {}", data.len());
+            Ok(data)
+        }
+        Err(e) => {
+            eprintln!("❌ Failed to get frame image: {}", e);
+            Err(e.to_string())
+        }
+    }
 }
 
 #[tauri::command]

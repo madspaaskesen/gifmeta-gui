@@ -1,7 +1,49 @@
 // src/components/FrameViewer.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 
-export default function FrameViewer({ frame, setFrame, metadata, setMetadata }) {
+export default function FrameViewer({ frame, setFrame, metadata, setMetadata, inputPath }) {
+  useEffect(() => {
+    if (typeof frame?.index !== "number" || frame?.imageData) return;
+
+    (async () => {
+      console.log("lets go");
+      const image = await fetchFrameImage(inputPath, frame.index);
+      console.log("d", image);
+      setFrame({ ...frame, imageData: image });
+    })();
+  }, [frame]);
+
+  async function fetchFrameImage(path, index) {
+    try {
+      console.log('fetchFrameImage', path, index)
+      const imageBytes = await invoke("get_frame", {
+        path,
+        frame: index,
+      });
+      console.log('imageBytes', imageBytes)
+
+      // Convert to base64
+      const blob = new Blob([new Uint8Array(imageBytes)], { type: "image/png" });
+      const base64 = await blobToBase64(blob);
+      return base64;
+    } catch (err) {
+      console.error("Failed to fetch frame image:", err);
+      return null;
+    }
+  }
+
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
   const handleDelayChange = (e) => {
     const newDelay = parseInt(e.target.value, 10) || 0;
     setFrame({ ...frame, delay_cs: newDelay });
@@ -40,11 +82,22 @@ export default function FrameViewer({ frame, setFrame, metadata, setMetadata }) 
       </div>
 
       {frame.imageData ? (
-        <img
-          src={frame.imageData}
-          alt={`Frame ${frame.index}`}
-          className="rounded shadow max-h-64 object-contain"
-        />
+        <div className="rounded shadow" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
+          <img
+            src={frame.imageData}
+            alt={`Frame ${frame.index}`}
+            style={{
+              width: `${metadata?.width}px`,
+              height: `${metadata?.height}px`,
+              imageRendering: "pixelated", // if you want sharp nearest-neighbor look
+              backgroundColor: "white",
+              border: "1px solid #ccc"
+            }}
+
+          />
+        </div>
+
+        
       ) : (
         <div className="w-full h-64 bg-gray-700 flex items-center justify-center text-white rounded">
           No image data
