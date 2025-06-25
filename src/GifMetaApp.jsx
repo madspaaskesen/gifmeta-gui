@@ -113,7 +113,7 @@ function GifMetaApp() {
         </button>
       </header>
 
-      <main className="flex h-[calc(100vh-100px)]">
+      <main className="flex h-[calc(100vh-85px)]">
         {/* Left column – thumbnails */}
         <div className="w-1/4 border-r overflow-y-auto p-2">
           <h2 className="text-sm font-semibold mb-2">Frames</h2>
@@ -122,7 +122,7 @@ function GifMetaApp() {
               <li
                 key={f.index}
                 onClick={() => setSelectedFrame(f)}
-                className={`cursor-pointer rounded p-2 text-center text-xs ${
+                className={`cursor-pointer rounded p-2 text-xs ${
                   selectedFrame?.index === f.index
                     ? "bg-primary text-primary-content"
                     : "bg-base-300"
@@ -153,7 +153,7 @@ function GifMetaApp() {
             <input type="radio" name="my_tabs" className="tab" aria-label="🧠 JSON" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               {metadata ? (
-                <pre className="bg-base-300 p-4 rounded-box text-green-300 text-xs overflow-auto">
+                <pre className="bg-accent p-4 rounded-box text-accent-content text-xs overflow-auto">
                   {JSON.stringify(
                     metadata,
                     (k, v) => (v === null ? undefined : v),
@@ -161,7 +161,7 @@ function GifMetaApp() {
                   )}
                 </pre>
               ) : (
-                <p className="opacity-60">Select a GIF to view metadata…</p>
+                <p className="opacity-60 mt-3">Select a GIF to view metadata…</p>
               )}
             </div>
 
@@ -178,7 +178,7 @@ function GifMetaApp() {
         </div>
       </main>
 
-      <footer className="sticky bottom-0 z-10 bg-base-100 shadow p-2 flex justify-between text-sm">
+      <footer className="sticky bottom-0 z-10 bg-base-200 text-base-content shadow border-1 border-t border-base-300 shadow p-2 flex justify-between text-sm">
         <span>Status: {status}</span>
       </footer>
     </div>

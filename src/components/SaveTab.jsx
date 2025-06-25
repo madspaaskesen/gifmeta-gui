@@ -1,18 +1,16 @@
 export default function SaveTab({ metadata, outputPath, setOutputPath, onSave }) {
   return (
     <div className="p-4 space-y-4">
-      <div>
-        <label className="label">
-          <span className="label-text">Output Path</span>
-        </label>
+      <fieldset class="fieldset w-full">
+        <legend class="fieldset-legend">Output Path</legend>
         <input
           type="text"
-          className="input input-bordered"
+          className="input input-bordered w-full"
           value={outputPath}
           onChange={(e) => setOutputPath(e.target.value)}
           placeholder="e.g., /Users/you/Desktop/edited.gif"
         />
-      </div>
+      </fieldset>
 
       <button className="btn btn-primary" onClick={onSave}>
         💾 Save Modified GIF

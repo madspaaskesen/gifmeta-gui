@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, setDefaultDelay, applyGlobalDelayToAll }) {
   const [applyToAll, setApplyToAll] = useState(false);
@@ -18,18 +18,16 @@ export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, set
   }
 
   return (
-    <div className="p-4 space-y-6">
-      <div>
-        <label className="label">
-          <span className="label-text font-semibold">Global Delay (cs)</span>
-        </label>
+    <div className="flex flex-col gap-2">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Global Delay (cs)</legend>
         <input
           type="number"
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered"
           value={defaultDelay}
           onChange={handleDelayChange}
         />
-        <div className="mt-2">
+        <p class="label">
           <label className="cursor-pointer label">
             <input
               type="checkbox"
@@ -39,28 +37,25 @@ export default function SettingsTab({ loopCount, setLoopCount, defaultDelay, set
             />
             <span className="label-text ml-2">Apply to all frames</span>
           </label>
-        </div>
-      </div>
+        </p>
+      </fieldset>
 
-      <div className="mt-3">
-        <label className="label">
-          <span className="label-text font-semibold">Loop Count</span>
-        </label>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Loop Count</legend>
         <input
           type="number"
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered"
           value={loopCount}
           onChange={handleLoopChange}
         />
-        <div className="text-xs text-gray-400 mt-1">0 means infinite loop</div>
-      </div>
+        <p class="label">0 means infinite loop</p>
+      </fieldset>
 
-      <div className="mt-3">
+      <div>
         <label className="label">
           <span className="label-text font-semibold">Theme</span>
         </label>
         <button className="btn btn-primary block" onClick={()=>{setTheme('light')}}>Light theme</button>
-        <button className="btn btn-primary block" onClick={()=>{setTheme('cupcake')}}>Cupcake theme</button>
         <button className="btn btn-primary block" onClick={()=>{setTheme('dark')}}>Dark theme</button>
       </div>
     </div>

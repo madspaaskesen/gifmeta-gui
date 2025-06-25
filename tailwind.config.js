@@ -3,6 +3,9 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/*.{js,ts,jsx,tsx}",
+    "./src/components/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
@@ -10,17 +13,9 @@ module.exports = {
   plugins: [require('daisyui')],
   daisyui: {
     themes: [
-      {
-        light: {
-          ...require("daisyui/src/colors/themes")["[data-theme=light]"],
-        },
-        dark: {
-          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
-        },
-        cupcake: {
-          ...require("daisyui/src/colors/themes")["[data-theme=cupcake]"],
-        },
-      },
+      "light",
+      "dark",
+      "cupcake",
     ],
     darkTheme: "dark", // optional: sets default dark theme when OS is dark
   },

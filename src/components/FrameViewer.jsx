@@ -1,5 +1,5 @@
 // src/components/FrameViewer.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
 export default function FrameViewer({ frame, setFrame, metadata, setMetadata, inputPath }) {
@@ -7,9 +7,7 @@ export default function FrameViewer({ frame, setFrame, metadata, setMetadata, in
     if (typeof frame?.index !== "number" || frame?.imageData) return;
 
     (async () => {
-      console.log("lets go");
       const image = await fetchFrameImage(inputPath, frame.index);
-      console.log("d", image);
       setFrame({ ...frame, imageData: image });
       
       const updatedFrames = metadata.frames.map((f) =>
@@ -22,13 +20,11 @@ export default function FrameViewer({ frame, setFrame, metadata, setMetadata, in
 
   async function fetchFrameImage(path, index) {
     try {
-      console.log('fetchFrameImage', path, index)
       const imageBytes = await invoke("get_frame", {
         path,
         frame: index,
       });
-      console.log('imageBytes', imageBytes)
-
+      
       // Convert to base64
       const blob = new Blob([new Uint8Array(imageBytes)], { type: "image/png" });
       const base64 = await blobToBase64(blob);
@@ -60,7 +56,6 @@ export default function FrameViewer({ frame, setFrame, metadata, setMetadata, in
 
     setMetadata({ ...metadata, frames: updatedFrames });
   };
-
 
   if (!frame) {
     return (
@@ -102,8 +97,6 @@ export default function FrameViewer({ frame, setFrame, metadata, setMetadata, in
 
           />
         </div>
-
-        
       ) : (
         <div className="w-full h-64 bg-gray-700 flex items-center justify-center text-white rounded">
           No image data
