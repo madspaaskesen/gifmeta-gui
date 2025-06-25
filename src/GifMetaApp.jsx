@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from '@tauri-apps/plugin-dialog';
 import FrameViewer from "./components/FrameViewer";
 import SettingsTab from "./components/SettingsTab";
+import SaveTab from "./components/SaveTab";
 import "./GifMetaApp.css";
 
 function GifMetaApp() {
@@ -26,10 +27,6 @@ function GifMetaApp() {
       setStatus("Error reading GIF");
     }
   };
-
-  function setTheme(theme) {
-    document.querySelector('html').setAttribute('data-theme', theme)
-  }
 
   async function saveGif() {
     try {
@@ -109,14 +106,11 @@ function GifMetaApp() {
             <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               <SettingsTab metadata={metadata} setMetadata={setMetadata} />
-              <button className="btn btn-primary block" onClick={()=>{setTheme('light')}}>Light theme</button>
-              <button className="btn btn-primary block" onClick={()=>{setTheme('cupcake')}}>Cupcake theme</button>
-              <button className="btn btn-primary block" onClick={()=>{setTheme('dark')}}>Dark theme</button>
             </div>
 
             <input type="radio" name="my_tabs" className="tab" aria-label="💾 Save" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
-              <button className="btn btn-accent btn-sm">💾 Save All</button>
+              <SaveTab metadata={null} outputPath={null} setOutputPath={null} onSave={null} />
             </div>
           </div>
         </div>
