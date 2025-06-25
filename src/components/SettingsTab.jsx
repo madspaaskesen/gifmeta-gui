@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 
 export default function SettingsTab({ metadata, setMetadata, applyGlobalDelayToAll }) {
-  const [globalDelay, setGlobalDelay] = useState(0);
-  const [loopCount, setLoopCount] = useState(metadata.loop_count ?? 0);
+  const [globalDelay, setGlobalDelay] = useState(metadata?.total_duration_cs ?? 0);
+  const [loopCount, setLoopCount] = useState(metadata?.loop_count ?? 0);
   const [applyToAll, setApplyToAll] = useState(false);
 
   const handleDelayChange = (e) => {
     const value = parseInt(e.target.value, 10) || 0;
     setGlobalDelay(value);
 
+    const updatedMetadata = { ...metadata, total_duration_cs: value };
+
     if (applyToAll) {
-      const updatedMetadata = {
-        ...metadata,
-        frames: metadata.frames.map((f) => ({
-          ...f,
-          delay_cs: value
-        }))
-      };
-      setMetadata(updatedMetadata);
+        updatedMetadata.frames = metadata.frames.map((f) => ({
+        ...f,
+        delay_cs: value,
+        }));
     }
+
+    setMetadata(updatedMetadata);
   };
 
   const handleLoopChange = (e) => {

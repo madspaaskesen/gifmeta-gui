@@ -31,6 +31,24 @@ function GifMetaApp() {
     document.querySelector('html').setAttribute('data-theme', theme)
   }
 
+  async function saveGif() {
+    try {
+      await invoke('save_modified_gif', {
+        inputPath: metadata.source_path, // or wherever it's stored
+        outputPath: null,                // or a custom output
+        loopCount: metadata.loop_count,
+        delayAll: null,                  // only if you want to apply same delay to all
+        delays: Object.fromEntries(
+          metadata.frames.map((f) => [f.index, f.delay_cs])
+        ),
+      });
+      alert("✅ GIF saved!");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to save");
+    }
+  }
+
   return (
     <div className="flex flex-col h-screen text-base-content bg-base-300">
 
@@ -68,12 +86,12 @@ function GifMetaApp() {
         {/* Right Panel */}
         <div className="flex-1 overflow-y-auto p-4">
           <div className="tabs tabs-lift">
-            <input type="radio" name="my_tabs_3" className="tab" aria-label="🖼️ Viewer" defaultChecked />
+            <input type="radio" name="my_tabs" className="tab" aria-label="🖼️ Viewer" defaultChecked />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               <FrameViewer frame={selectedFrame} setFrame={setSelectedFrame} metadata={metadata} setMetadata={setMetadata} />
             </div>
 
-            <input type="radio" name="my_tabs_3" className="tab" aria-label="🧠 JSON" />
+            <input type="radio" name="my_tabs" className="tab" aria-label="🧠 JSON" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               {metadata ? (
                 <pre className="bg-base-300 p-4 rounded-box text-green-300 text-xs overflow-auto">
@@ -88,12 +106,17 @@ function GifMetaApp() {
               )}
             </div>
 
-            <input type="radio" name="my_tabs_3" className="tab" aria-label="⚙️ Settings" />
+            <input type="radio" name="my_tabs" className="tab" aria-label="⚙️ Settings" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
               <SettingsTab metadata={metadata} setMetadata={setMetadata} />
               <button className="btn btn-primary block" onClick={()=>{setTheme('light')}}>Light theme</button>
               <button className="btn btn-primary block" onClick={()=>{setTheme('cupcake')}}>Cupcake theme</button>
               <button className="btn btn-primary block" onClick={()=>{setTheme('dark')}}>Dark theme</button>
+            </div>
+
+            <input type="radio" name="my_tabs" className="tab" aria-label="💾 Save" />
+            <div className="tab-content bg-base-100 border-base-300 p-6">
+              <button className="btn btn-accent btn-sm">💾 Save All</button>
             </div>
           </div>
         </div>
@@ -101,7 +124,6 @@ function GifMetaApp() {
 
       <footer className="sticky bottom-0 z-10 bg-base-100 shadow p-2 flex justify-between text-sm">
         <span>Status: {status}</span>
-        <button className="btn btn-accent btn-sm relative top-[-16px] left-[-10px]">💾 Save All</button>
       </footer>
     </div>
   );
