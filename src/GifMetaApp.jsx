@@ -2,12 +2,12 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from '@tauri-apps/plugin-dialog';
 import FrameViewer from "./components/FrameViewer";
+import SettingsTab from "./components/SettingsTab";
 import "./GifMetaApp.css";
 
 function GifMetaApp() {
   const [metadata, setMetadata] = useState(null);
   const [status, setStatus]   = useState("Ready");
-  const [activeTab, setActiveTab] = useState("viewer");
   const [selectedFrame, setSelectedFrame] = useState(null);
 
   const handleSelect = async () => {
@@ -49,7 +49,12 @@ function GifMetaApp() {
             {metadata?.frames?.map((f) => (
               <li
                 key={f.index}
-                className="bg-base-300 rounded p-2 text-center text-xs"
+                onClick={() => setSelectedFrame(f)}
+                className={`cursor-pointer rounded p-2 text-center text-xs ${
+                  selectedFrame?.index === f.index
+                    ? "bg-primary text-primary-content"
+                    : "bg-base-300"
+                }`}
               >
                 🖼️ Frame {f.index}
               </li>
@@ -65,7 +70,7 @@ function GifMetaApp() {
           <div className="tabs tabs-lift">
             <input type="radio" name="my_tabs_3" className="tab" aria-label="🖼️ Viewer" defaultChecked />
             <div className="tab-content bg-base-100 border-base-300 p-6">
-              <FrameViewer frame={selectedFrame} />
+              <FrameViewer frame={selectedFrame} setFrame={setSelectedFrame} metadata={metadata} setMetadata={setMetadata} />
             </div>
 
             <input type="radio" name="my_tabs_3" className="tab" aria-label="🧠 JSON" />
@@ -83,8 +88,9 @@ function GifMetaApp() {
               )}
             </div>
 
-            <input type="radio" name="my_tabs_3" className="tab" aria-label="⚙️ Layout" />
+            <input type="radio" name="my_tabs_3" className="tab" aria-label="⚙️ Settings" />
             <div className="tab-content bg-base-100 border-base-300 p-6">
+              <SettingsTab metadata={metadata} setMetadata={setMetadata} />
               <button className="btn btn-primary block" onClick={()=>{setTheme('light')}}>Light theme</button>
               <button className="btn btn-primary block" onClick={()=>{setTheme('cupcake')}}>Cupcake theme</button>
               <button className="btn btn-primary block" onClick={()=>{setTheme('dark')}}>Dark theme</button>
