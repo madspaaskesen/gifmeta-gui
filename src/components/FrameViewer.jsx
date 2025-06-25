@@ -11,6 +11,12 @@ export default function FrameViewer({ frame, setFrame, metadata, setMetadata, in
       const image = await fetchFrameImage(inputPath, frame.index);
       console.log("d", image);
       setFrame({ ...frame, imageData: image });
+      
+      const updatedFrames = metadata.frames.map((f) =>
+        f.index === frame.index ? { ...f, imageData: image } : f
+      );
+      setMetadata({ ...metadata, frames: updatedFrames });
+
     })();
   }, [frame]);
 

@@ -27,7 +27,8 @@ function GifMetaApp() {
 
     // Total duration: sum of frame delays OR fallback to defaultDelay
     const totalDuration = metadata.frames.reduce((sum, frame) => {
-      return sum + (frame.delay_cs ?? defaultDelay ?? 0);
+      const delay = frame.delay_cs;
+      return sum + (delay === 0 || delay == null ? 1 : delay);
     }, 0);
 
     const statusMsg = `📁 ${shortName} · Duration: ${totalDuration}cs · Loops: ${loopCount} · Frames: ${metadata.frames.length} · ✔`;

@@ -7,14 +7,14 @@ export default function SaveTab({ metadata, outputPath, setOutputPath, onSave })
         </label>
         <input
           type="text"
-          className="input input-bordered w-full"
+          className="input input-bordered"
           value={outputPath}
           onChange={(e) => setOutputPath(e.target.value)}
           placeholder="e.g., /Users/you/Desktop/edited.gif"
         />
       </div>
 
-      <button className="btn btn-primary w-full" onClick={onSave}>
+      <button className="btn btn-primary" onClick={onSave}>
         💾 Save Modified GIF
       </button>
 
