@@ -1,6 +1,6 @@
+use gifmeta;
 use std::collections::HashMap;
 use std::path::PathBuf;
-use gifmeta;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -40,7 +40,12 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, get_info, get_frame, save_modified_gif])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            get_info,
+            get_frame,
+            save_modified_gif
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
