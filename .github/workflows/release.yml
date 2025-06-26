@@ -97,13 +97,13 @@ jobs:
           mkdir -p dist
 
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            cp target/${{ matrix.target }}/release/bundle/dmg/*.dmg dist/
+            cp src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg dist/
           elif [[ "${{ runner.os }}" == "Windows" ]]; then
-            cp target/${{ matrix.target }}/release/bundle/msi/*.msi dist/
+            cp src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi dist/
           elif [[ "${{ runner.os }}" == "Linux" ]]; then
-            cp target/${{ matrix.target }}/release/bundle/appimage/*.AppImage dist/
+            cp src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage dist/
             # or use .deb if preferred:
-            # cp target/${{ matrix.target }}/release/bundle/deb/*.deb dist/
+            # cp src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb dist/
           fi
 
       - name: Upload installer
