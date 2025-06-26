@@ -1,5 +1,7 @@
 # 🦀 GIFmeta GUI
 
+![Animated Crab](https://your-hosting/crab_idle_loop.gif)
+
 **A lightweight cross-platform desktop app to inspect and edit GIF metadata.**  
 Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.org/), and [React](https://react.dev/).
 
