@@ -35,10 +35,35 @@ npm install
 
 # Start in development mode
 npm run tauri dev
-````
+```
 
 Make sure you have Rust installed:
 👉 [Install Rust](https://www.rust-lang.org/tools/install)
+
+---
+
+## 🧭 Installation Instructions
+
+Read installation installtions here:
+
+👉 [INSTALL.md](INSTALL.md)
+
+---
+
+### 👀 Preview (Screenshot)
+
+![Screenshot preview 1](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1.png)
+![Screenshot preview 2](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2.png)
+![Screenshot preview 3](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-3.png)
+![Screenshot preview 4](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4.png)
+![Screenshot preview 5](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5.png)
+
+Darkmode
+![Screenshot preview 1 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1-darkmode.png)
+![Screenshot preview 2 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2-darkmode.png)
+![Screenshot preview 3 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-3-darkmode.png)
+![Screenshot preview 4 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4-darkmode.png)
+![Screenshot preview 5 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5-darkmode.png)
 
 ---
 

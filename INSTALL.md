@@ -42,7 +42,18 @@ sudo apt install libwebkit2gtk-4.0-dev libjavascriptcoregtk-4.1-dev
 
 ### 👀 Preview (Screenshot)
 
-![Screenshot preview](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1.png)
+![Screenshot preview 1](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1.png)
+![Screenshot preview 2](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2.png)
+![Screenshot preview 3](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-3.png)
+![Screenshot preview 4](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4.png)
+![Screenshot preview 5](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5.png)
+
+Darkmode
+![Screenshot preview 1 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1-darkmode.png)
+![Screenshot preview 2 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2-darkmode.png)
+![Screenshot preview 3 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-3-darkmode.png)
+![Screenshot preview 4 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4-darkmode.png)
+![Screenshot preview 5 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5-darkmode.png)
 
 ---
 
