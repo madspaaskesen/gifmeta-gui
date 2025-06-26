@@ -85,11 +85,11 @@ jobs:
       - name: Install Tauri CLI
         run: cargo install tauri-cli --force
 
-      #- name: Build Tauri app
-      #  run: cargo tauri build --target ${{ matrix.target }}
+      - name: Build frontend + Tauri app
+        run: cargo tauri build --target ${{ matrix.target }}
       
-      - name: Build frontend
-        run: npm run tauri build --target ${{ matrix.target }}
+      #- name: Build frontend
+      #  run: npm run tauri build --target ${{ matrix.target }}
 
       - name: Copy installer to dist/
         shell: bash
