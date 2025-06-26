@@ -105,6 +105,10 @@ jobs:
             # or use .deb if preferred:
             # cp src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb dist/
           fi
+      
+      - name: Clean up extra files
+        run: |
+          rm -f dist/index.html dist/*.svg
 
       - name: Upload installer
         uses: softprops/action-gh-release@v1
