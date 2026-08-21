@@ -26,6 +26,7 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 ![MadeWithTauri](https://img.shields.io/badge/ui-tauri-8d64c0?logo=tauri&logoColor=white)
 ![GIFmeta](https://img.shields.io/badge/gifmeta--cli--core-blue)
 [![SacredAI](https://img.shields.io/badge/powered%20by-%F0%9F%95%8A%EF%B8%8F%20Sacred%20AI-lightgrey?style=flat-square)](https://sacre-ai.com)
+[![mySiteChart](https://badges.mysitechart.com/github-project/madspaaskesen/gifmeta-gui?site=COM)](https://mysitechart.com/In?github-project=madspaaskesen%2Fgifmeta-gui)
 
 ---
 
