@@ -68,14 +68,25 @@ Download the installer for your platform from the [latest release](https://githu
 
 ---
 
-### 👀 Preview (Screenshot)
+### 👀 Preview
 
-![Screenshot preview 2](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2.png)
-![Screenshot preview 4](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4.png)
+**Viewer** — frame list with 🔑 keyframes / Δ delta frames, playback and frame info
 
-Darkmode
-![Screenshot preview 1 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1-darkmode.png)
-![Screenshot preview 5 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5-darkmode.png)
+![Viewer – light](docs/screenshots/light-viewer.png)
+
+**Raw view** — only the pixels a delta frame stores (checkerboard = reused from earlier frames)
+
+![Raw view – dark](docs/screenshots/dark-raw.png)
+
+<details>
+<summary>More screenshots (settings, light & dark)</summary>
+
+![Settings – light](docs/screenshots/light-settings.png)
+![Viewer – dark](docs/screenshots/dark-viewer.png)
+![Raw view – light](docs/screenshots/light-raw.png)
+![Settings – dark](docs/screenshots/dark-settings.png)
+
+</details>
 
 ---
 

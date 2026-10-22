@@ -56,20 +56,17 @@ Requires [Rust](https://www.rust-lang.org/tools/install) and Node.js; on Linux a
 
 ---
 
-### 👀 Preview (Screenshot)
+### 👀 Preview
 
-![Screenshot preview 1](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1.png)
-![Screenshot preview 2](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2.png)
-![Screenshot preview 3](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-3.png)
-![Screenshot preview 4](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4.png)
-![Screenshot preview 5](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5.png)
+![Viewer – light](docs/screenshots/light-viewer.png)
+![Raw view – light](docs/screenshots/light-raw.png)
+![Settings – light](docs/screenshots/light-settings.png)
 
 Darkmode
-![Screenshot preview 1 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-1-darkmode.png)
-![Screenshot preview 2 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-2-darkmode.png)
-![Screenshot preview 3 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-3-darkmode.png)
-![Screenshot preview 4 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-4-darkmode.png)
-![Screenshot preview 5 Darkmode](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/Screen-5-darkmode.png)
+
+![Viewer – dark](docs/screenshots/dark-viewer.png)
+![Raw view – dark](docs/screenshots/dark-raw.png)
+![Settings – dark](docs/screenshots/dark-settings.png)
 
 ---
 

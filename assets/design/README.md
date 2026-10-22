@@ -2,7 +2,9 @@
 
 | File | What |
 |---|---|
-| `gifmeta-crab-original-mp-it.gif` | Original crab from the gifmeta project page on mp-it.dk (raster, 1024×1024) |
+| `gifmeta-crab-original-mp-it.gif` | Original crab from the gifmeta project page on mp-it.dk (raster, 1024×1024; was `crab_idle_loop2.gif` on Supabase) |
+| `crab_idle_loop_125x125.gif` | Original animated idle crab, 125×125 (old Supabase storage) |
+| `crab_idle_loop_125x125_modified.gif` | Same, edited with gifmeta — was the README header in v0.1 |
 | `gifmeta-crab-v1.svg` | v1 — first clean SVG redraw (4 colours, left side drawn once + mirrored) |
 | `gifmeta-crab-v2-inkscape.svg` | v2 — Mads' Inkscape edit: wider claws and legs (sides scaled slightly differently) |
 | `../gifmeta-crab.svg` | **Current** — v2 made exactly symmetric (average of both side scalings) |
