@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "gifmeta-gui",
-  "version": "0.3.0",
-  "identifier": "com.gifmeta-gui.app",
+  "productName": "GIFmeta",
+  "version": "0.3.1",
+  "identifier": "dk.mp-it.gifmeta",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "gifmeta-gui",
+        "title": "GIFmeta",
         "width": 1200,
         "height": 800,
         "minWidth": 800,

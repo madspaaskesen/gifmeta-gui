@@ -18,28 +18,32 @@ jobs:
           - os: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
             name: linux-x86_64
+            bundles: appimage
 
           - os: macos-latest
             target: x86_64-apple-darwin
             name: macos-x86_64
+            bundles: dmg
 
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             name: windows-x86_64
+            bundles: msi
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
+          targets: ${{ matrix.target }}
 
-      - name: Add Rust target
-        run: rustup target add ${{ matrix.target }}
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+          key: ${{ matrix.target }}
 
       - name: Install JSCoreGTK 4.0
         if: runner.os == 'Linux'
@@ -65,18 +69,7 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-tauri-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-tauri-
-
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -90,7 +83,7 @@ jobs:
       #  run: cargo tauri build --target ${{ matrix.target }}
       
       - name: Build frontend + Tauri app
-        run: npm run tauri build -- --target ${{ matrix.target }}
+        run: npm run tauri build -- --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
 
       #- name: Build frontend
       #  run: npm run tauri build --target ${{ matrix.target }}
@@ -109,7 +102,7 @@ jobs:
           fi
 
       - name: Upload installer
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: release-dist/*
         env:

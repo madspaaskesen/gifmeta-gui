@@ -1,7 +1,7 @@
 [package]
 name = "gifmeta-gui"
-version = "0.3.0"
-description = "GIF meta GUI - edit loop and delay setting in GIF files."
+version = "0.3.1"
+description = "Desktop app to inspect animated GIFs, fix loops and delays, and delete frames safely. Built with Tauri and Rust."
 authors = ["Mads Paaskesen"]
 edition = "2021"
 

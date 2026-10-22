@@ -3,35 +3,35 @@
 Download the file for your platform from the
 👉 [latest release](https://github.com/madspaaskesen/gifmeta-gui/releases/latest)
 
-### 🪟 Windows — `gifmeta-gui_<version>_x64_en-US.msi`
+### 🪟 Windows — `GIFmeta_<version>_x64_en-US.msi`
 
 1. **Double-click** the `.msi` installer and follow the steps.
-2. Start **gifmeta-gui** from the Start menu.
+2. Start **GIFmeta** from the Start menu.
 
 > If SmartScreen warns you, click **"More info" → "Run anyway"**.
 > This is normal for new indie apps while they build up reputation. ✨
 
 ---
 
-### 🍏 macOS — `gifmeta-gui_<version>_x64.dmg`
+### 🍏 macOS — `GIFmeta_<version>_x64.dmg`
 
-1. Open the `.dmg` and drag **gifmeta-gui** into **Applications**.
+1. Open the `.dmg` and drag **GIFmeta** into **Applications**.
 2. Start it from Applications / Launchpad.
 
 > If macOS says the app is from an "unidentified developer", open
 > **System Settings → Privacy & Security → Open Anyway**, then relaunch it.
-> Or in Terminal: `xattr -d com.apple.quarantine /Applications/gifmeta-gui.app`
+> Or in Terminal: `xattr -d com.apple.quarantine /Applications/GIFmeta.app`
 >
 > The current build is for Intel (x64) and runs on Apple Silicon via Rosetta.
 > Signed + notarized builds (and a native Apple Silicon build) are planned.
 
 ---
 
-### 🐧 Linux — `gifmeta-gui_<version>_amd64.AppImage`
+### 🐧 Linux — `GIFmeta_<version>_amd64.AppImage`
 
 ```bash
-chmod +x gifmeta-gui_*_amd64.AppImage
-./gifmeta-gui_*_amd64.AppImage
+chmod +x GIFmeta_*_amd64.AppImage
+./GIFmeta_*_amd64.AppImage
 ```
 
 If it complains about missing libraries (Ubuntu/Debian):
