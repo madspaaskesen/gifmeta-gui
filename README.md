@@ -1,16 +1,25 @@
-# 🦀 GIFmeta GUI
+<p align="center">
+  <img src="assets/gifmeta-crab.svg" width="180" alt="gifmeta crab logo">
+</p>
 
-![Animated Crab](https://ojkwbrxgljlgelqndiai.supabase.co/storage/v1/object/public/sacred-ai/web/gifmeta-gui/crab_idle_loop_125x125_modified.gif)
+<h1 align="center">🦀 GIFmeta GUI</h1>
+
+<p align="center">
+  <a href="https://github.com/madspaaskesen/gifmeta-gui/releases/latest"><img src="https://img.shields.io/github/v/release/madspaaskesen/gifmeta-gui?label=release&color=E0592C" alt="Latest release"></a>
+  <a href="https://github.com/madspaaskesen/gifmeta-gui/releases"><img src="https://img.shields.io/github/downloads/madspaaskesen/gifmeta-gui/total?color=862E13" alt="Downloads"></a>
+  <a href="https://github.com/madspaaskesen/gifmeta-gui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/madspaaskesen/gifmeta-gui/ci.yml?label=CI" alt="CI"></a>
+  <a href="https://crates.io/crates/gifmeta"><img src="https://img.shields.io/crates/v/gifmeta?label=gifmeta%20crate" alt="gifmeta crate"></a>
+</p>
 
 **A lightweight cross-platform desktop app to inspect and edit GIF metadata.**  
 Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.org/), and [React](https://react.dev/).
 
-> Edit loop counts, frame delays, and gain creative control over your GIFs — all in a clean native GUI.  
+> Edit loop counts and frame delays, play your changes before saving, and see how frame-optimized GIFs are built — all in a clean native GUI.  
 > Powered by the [gifmeta](https://crates.io/crates/gifmeta) Rust crate.
 
-![Version](https://img.shields.io/badge/version-0.2.0-lightgrey)
-[![CI](https://img.shields.io/github/actions/workflow/status/madspaaskesen/gifmeta-gui/ci.yml?style=flat-square)](https://github.com/madspaaskesen/gifmeta-gui)
-![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-green)
+<p align="center">
+  <a href="https://github.com/madspaaskesen/gifmeta-gui/releases/latest"><b>📥 Download for macOS · Windows · Linux</b></a>
+</p>
 
 ---
 
@@ -31,7 +40,7 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 ![Rust](https://img.shields.io/badge/built_with-rust-orange)
 ![MadeWithTauri](https://img.shields.io/badge/ui-tauri-8d64c0?logo=tauri&logoColor=white)
 ![GIFmeta](https://img.shields.io/badge/gifmeta--cli--core-blue)
-[![SacredAI](https://img.shields.io/badge/powered%20by-%F0%9F%95%8A%EF%B8%8F%20Sacred%20AI-lightgrey?style=flat-square)](https://sacre-ai.com)
+[![SacredAI](https://img.shields.io/badge/powered%20by-%F0%9F%95%8A%EF%B8%8F%20Sacred%20AI-lightgrey?style=flat-square)](https://sacred-ai.com)
 [![mySiteChart](https://badges.mysitechart.com/github-project/madspaaskesen/gifmeta-gui?site=COM)](https://mysitechart.com/In?github-project=madspaaskesen%2Fgifmeta-gui)
 
 ---
@@ -53,7 +62,7 @@ Make sure you have Rust installed:
 
 ## 🧭 Installation Instructions
 
-Read installation installtions here:
+Download the installer for your platform from the [latest release](https://github.com/madspaaskesen/gifmeta-gui/releases/latest), then follow the steps here:
 
 👉 [INSTALL.md](INSTALL.md)
 
