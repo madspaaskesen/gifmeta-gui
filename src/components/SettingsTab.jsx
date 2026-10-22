@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function SettingsTab({ metadata, defaultDelay, onApplyDelayToAll, loop, setLoop }) {
+export default function SettingsTab({ metadata, defaultDelay, onApplyDelayToAll, loop, setLoop, edits, setEdits }) {
   const [delay, setDelay] = useState(defaultDelay);
   useEffect(() => setDelay(defaultDelay), [defaultDelay]);
 
@@ -58,6 +58,33 @@ export default function SettingsTab({ metadata, defaultDelay, onApplyDelayToAll,
             onChange={(e) => setLoop({ ...loop, count: Math.max(1, parseInt(e.target.value, 10) || 1) })}
           />
           <span className={loop.infinite ? "opacity-50" : ""}>{loop.count === 1 ? "time (once)" : "times"}</span>
+        </label>
+      </fieldset>
+
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">Frame editing</legend>
+        <label className="label cursor-pointer justify-start gap-2">
+          <input
+            type="checkbox"
+            className="toggle toggle-sm toggle-success"
+            checked={edits.unoptimize}
+            disabled={disabled}
+            onChange={(e) => setEdits({ ...edits, unoptimize: e.target.checked })}
+          />
+          <span>🧱 Unoptimize — save every frame as a full image</span>
+        </label>
+        <p className="label">Bigger file, but every frame is independent and safe to edit anywhere.</p>
+        <label className="flex items-center gap-2 mt-2">
+          <span>Delay of deleted frames</span>
+          <select
+            className="select select-bordered select-sm w-auto"
+            value={edits.deleteMode}
+            disabled={disabled}
+            onChange={(e) => setEdits({ ...edits, deleteMode: e.target.value })}
+          >
+            <option value="merge">Add to previous frame (same duration)</option>
+            <option value="drop">Drop (shorter animation)</option>
+          </select>
         </label>
       </fieldset>
 

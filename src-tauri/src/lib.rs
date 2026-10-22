@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use gifmeta::{FrameRenderer, LoopMode, ModOptions, PreviewMode};
+use gifmeta::{DeleteMode, FrameRenderer, LoopMode, ModOptions, PreviewMode};
 use tauri::ipc::{Channel, InvokeResponseBody, Response};
 
 /// Reads all metadata incl. per-frame info (rect, disposal, keyframe flag).
@@ -63,12 +63,27 @@ async fn get_all_frames(
     .map_err(|e| e.to_string())?
 }
 
-/// Writes the modified GIF and returns the path that was written.
+/// What `save_modified_gif` did (sent back to the UI).
+#[derive(serde::Serialize)]
+struct SaveReport {
+    output: String,
+    frames_in: usize,
+    frames_out: usize,
+    deleted: Vec<usize>,
+    rekeyed: Vec<usize>,
+    quantized: Vec<usize>,
+    warnings: Vec<String>,
+}
+
+/// Writes the modified GIF and returns a report.
 ///
 /// * `loop_infinite = true` → loop forever (wins over `loop_count`)
 /// * `loop_count = n` (n ≥ 1) → plays n times
 /// * both `None`/false → keep the original loop setting
+/// * `delete_frames` / `keyframes`: ORIGINAL frame indices; `unoptimize`: every frame → full image
+/// * `delete_mode`: `"merge"` (default, delay goes to the previous frame) or `"drop"`
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 async fn save_modified_gif(
     input_path: String,
     output_path: Option<String>,
@@ -76,7 +91,11 @@ async fn save_modified_gif(
     loop_count: Option<u16>,
     delay_all: Option<u16>,
     delays: Option<HashMap<usize, u16>>,
-) -> Result<String, String> {
+    delete_frames: Option<Vec<usize>>,
+    keyframes: Option<Vec<usize>>,
+    unoptimize: Option<bool>,
+    delete_mode: Option<String>,
+) -> Result<SaveReport, String> {
     let loop_mode = match (loop_infinite.unwrap_or(false), loop_count) {
         (true, _) => Some(LoopMode::Infinite),
         (false, Some(0)) => return Err("Loop count must be at least 1".into()),
@@ -88,12 +107,29 @@ async fn save_modified_gif(
         loop_mode,
         delay_all,
         delays,
+        delete_frames,
+        keyframes,
+        unoptimize: unoptimize.unwrap_or(false),
+        delete_mode: match delete_mode.as_deref() {
+            Some("drop") => DeleteMode::DropDelay,
+            _ => DeleteMode::MergeDelay,
+        },
+        ..Default::default()
     };
     let input = PathBuf::from(input_path);
-    let out = tauri::async_runtime::spawn_blocking(move || gifmeta::modify_gif(&input, opts))
-        .await
-        .map_err(|e| e.to_string())??;
-    Ok(out.display().to_string())
+    let r =
+        tauri::async_runtime::spawn_blocking(move || gifmeta::modify_gif_with_report(&input, opts))
+            .await
+            .map_err(|e| e.to_string())??;
+    Ok(SaveReport {
+        output: r.output.display().to_string(),
+        frames_in: r.frames_in,
+        frames_out: r.frames_out,
+        warnings: r.warnings(),
+        deleted: r.deleted,
+        rekeyed: r.rekeyed,
+        quantized: r.quantized,
+    })
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

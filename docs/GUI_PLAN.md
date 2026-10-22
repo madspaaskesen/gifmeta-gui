@@ -61,9 +61,10 @@ What changes for the GUI:
 - ✅ "Reset changes" button. ⬜ file size before/after save.
 - 🟨 Theme choice is remembered (localStorage). ⬜ follow OS by default.
 - ✅ Bigger default window (1200×800, min 800×560).
-- ⬜ Later (crate phases 4–5): per-frame checkboxes **"Convert to full image"** and **"Delete frame"**
-  (deleted frames dimmed / struck through, excluded from duration + frame count). Always send
-  **original** frame indices.
+- ✅ (0.3.0, gifmeta 0.6.0) per-frame toggles **"🗑️ Delete frame"** (also ⌫) and **"🔑 Convert to full image"**,
+  Settings: **🧱 Unoptimize** + delete-delay mode (merge / drop). Deleted frames dimmed + struck through;
+  playback and status-bar duration follow the result (`playbackSequence`). Save shows the gifmeta report
+  (deleted / re-keyed / colour-reduced). Always sends **original** frame indices.
 
 ## 5. Cleanup
 - ✅ Remove dead `applyToAllChange` in `SettingsTab.jsx`.

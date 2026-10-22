@@ -31,9 +31,11 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 - ✨ **Pretty / 🧩 Raw view**: see a frame as it plays, or only the pixels it stores
 - ▶ **Play** the GIF with your edited delays before saving
 - ⏱️ Edit per-frame delays or set one delay for all frames
+- 🗑️ **Delete frames** safely (⌫) — frames that depended on them are rebuilt automatically, the delay moves to the previous frame
+- 🔑 **Convert frames to full images**, or 🧱 **unoptimize** the whole GIF
 - 🔄 Loop forever or a fixed number of plays
 - 💾 Save via native dialog, with unsaved-changes indicator and reset
-- ⌨️ Keyboard: ↑/↓ change frame, Space play/pause
+- ⌨️ Keyboard: ↑/↓ change frame, Space play/pause, ⌫ delete/restore frame
 - 🌒 Light & dark theme
 - 💨 Ultra-fast thanks to the Rust backend via Tauri
 

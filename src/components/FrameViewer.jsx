@@ -20,6 +20,10 @@ export default function FrameViewer({
   playing,
   onTogglePlay,
   preload,
+  onToggleDelete,
+  onToggleRekey,
+  canDelete = true,
+  unoptimize = false,
 }) {
   if (!metadata || !frame) {
     return (
@@ -85,6 +89,42 @@ export default function FrameViewer({
         </label>
       </div>
 
+      {/* Frame edits */}
+      <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+        <label
+          className={`label cursor-pointer gap-2 ${!canDelete && !frame.deleted ? "opacity-50" : ""}`}
+          title={canDelete || frame.deleted ? "Delete this frame when saving (⌫)" : "At least one frame must remain"}
+        >
+          <input
+            type="checkbox"
+            className="toggle toggle-sm toggle-error"
+            checked={!!frame.deleted}
+            disabled={playing || (!canDelete && !frame.deleted)}
+            onChange={onToggleDelete}
+          />
+          <span>🗑️ Delete frame</span>
+        </label>
+        <label
+          className={`label cursor-pointer gap-2 ${frame.is_keyframe || frame.deleted || unoptimize ? "opacity-50" : ""}`}
+          title={
+            unoptimize
+              ? "Unoptimize is on — every frame becomes a full image"
+              : frame.is_keyframe
+                ? "Already a full image"
+                : "Write this frame as a full image when saving"
+          }
+        >
+          <input
+            type="checkbox"
+            className="toggle toggle-sm toggle-success"
+            checked={!!frame.rekey || (unoptimize && !frame.deleted)}
+            disabled={playing || frame.is_keyframe || frame.deleted || unoptimize}
+            onChange={onToggleRekey}
+          />
+          <span>🔑 Convert to full image</span>
+        </label>
+      </div>
+
       {preload && (
         <div className="w-64 text-xs text-center">
           Loading frames {preload.loaded}/{preload.total}…
@@ -97,6 +137,10 @@ export default function FrameViewer({
         <span className="badge badge-outline">
           Frame {frame.index} / {metadata.frame_count - 1}
         </span>
+        {frame.deleted && <span className="badge badge-error">🗑️ Will be deleted</span>}
+        {!frame.deleted && !frame.is_keyframe && (frame.rekey || unoptimize) && (
+          <span className="badge badge-success badge-outline">→ 🔑 full image on save</span>
+        )}
         <span
           className={`badge ${frame.is_keyframe ? "badge-success" : "badge-warning"}`}
           title={

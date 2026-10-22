@@ -41,22 +41,52 @@ export function loopLabel(infinite, count) {
   return count === 1 ? "1× (once)" : `${count}×`;
 }
 
-/** True when any delay or the loop setting differs from the original file. */
-export function isDirty(original, frames, loop) {
+/** Default frame-edit settings (not per frame). */
+export const DEFAULT_EDITS = { unoptimize: false, deleteMode: "merge" };
+
+/** True when any delay, the loop setting or a frame edit differs from the original file. */
+export function isDirty(original, frames, loop, edits = DEFAULT_EDITS) {
   if (!original || !frames) return false;
   if (loop.infinite !== original.loop_infinite) return true;
   if (!loop.infinite && loop.count !== original.loop_count) return true;
-  return frames.some((f, i) => f.delay_cs !== original.frames[i]?.delay_cs);
+  if (edits.unoptimize) return true;
+  return frames.some(
+    (f, i) => f.delay_cs !== original.frames[i]?.delay_cs || f.deleted || f.rekey,
+  );
+}
+
+/**
+ * The frames as they will play after saving: deleted frames are skipped and (in "merge" mode)
+ * their delay is added to the previous kept frame — or the next one when deleting at the start.
+ * Mirrors gifmeta's `DeleteMode`. Returns [{ index, delayCs }] with ORIGINAL indices.
+ */
+export function playbackSequence(frames, deleteMode = "merge") {
+  const seq = [];
+  let carry = 0;
+  for (const f of frames ?? []) {
+    if (f.deleted) {
+      if (deleteMode === "merge") {
+        if (seq.length) seq[seq.length - 1].delayCs += f.delay_cs;
+        else carry += f.delay_cs;
+      }
+      continue;
+    }
+    seq.push({ index: f.index, delayCs: f.delay_cs + carry });
+    carry = 0;
+  }
+  return seq;
 }
 
 /** Builds the arguments for the `save_modified_gif` Tauri command. */
-export function buildSaveArgs({ inputPath, outputPath, original, frames, loop }) {
+export function buildSaveArgs({ inputPath, outputPath, original, frames, loop, edits = DEFAULT_EDITS }) {
   const loopChanged =
     loop.infinite !== original.loop_infinite ||
     (!loop.infinite && loop.count !== original.loop_count);
   const delaysChanged = frames.some((f, i) => f.delay_cs !== original.frames[i]?.delay_cs);
   const first = frames[0]?.delay_cs;
   const allSame = frames.every((f) => f.delay_cs === first);
+  const deleteFrames = frames.filter((f) => f.deleted).map((f) => f.index);
+  const keyframes = frames.filter((f) => f.rekey && !f.deleted).map((f) => f.index);
 
   return {
     inputPath,
@@ -68,5 +98,9 @@ export function buildSaveArgs({ inputPath, outputPath, original, frames, loop })
       delaysChanged && !allSame
         ? Object.fromEntries(frames.map((f) => [f.index, f.delay_cs]))
         : null,
+    deleteFrames: deleteFrames.length ? deleteFrames : null,
+    keyframes: keyframes.length ? keyframes : null,
+    unoptimize: edits.unoptimize || null,
+    deleteMode: deleteFrames.length ? edits.deleteMode : null,
   };
 }
