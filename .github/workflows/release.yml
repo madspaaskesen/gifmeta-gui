@@ -95,28 +95,22 @@ jobs:
       #- name: Build frontend
       #  run: npm run tauri build --target ${{ matrix.target }}
 
-      - name: Copy installer to dist/
+      - name: Copy installer to release-dist/
         shell: bash
         run: |
-          mkdir -p dist
+          mkdir -p release-dist
 
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            cp src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg dist/
+            cp src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg release-dist/
           elif [[ "${{ runner.os }}" == "Windows" ]]; then
-            cp src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi dist/
+            cp src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi release-dist/
           elif [[ "${{ runner.os }}" == "Linux" ]]; then
-            cp src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage dist/
-            # or use .deb if preferred:
-            # cp src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb dist/
+            cp src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage release-dist/
           fi
-      
-      - name: Clean up extra files (non-Windows)
-        if: runner.os != 'Windows'
-        run: rm -f dist/index.html dist/*.svg
 
       - name: Upload installer
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: release-dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
