@@ -8,7 +8,7 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 > Edit loop counts, frame delays, and gain creative control over your GIFs — all in a clean native GUI.  
 > Powered by the [gifmeta](https://crates.io/crates/gifmeta) Rust crate.
 
-![Version](https://img.shields.io/badge/version-0.1.0-lightgrey)
+![Version](https://img.shields.io/badge/version-0.2.0-lightgrey)
 [![CI](https://img.shields.io/github/actions/workflow/status/madspaaskesen/gifmeta-gui/ci.yml?style=flat-square)](https://github.com/madspaaskesen/gifmeta-gui)
 ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-green)
 
@@ -16,11 +16,17 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 
 ## 🚀 Features
 
-- 📁 Open GIF files via native dialog
+- 📁 Open GIF files via native dialog — or drag & drop onto the window
 - 🧠 Inspect metadata: dimensions, frames, loop count, transparency, etc.
-- 🛠️ Tweak settings (planned)
-- 🌒 Dark-themed native UI
-- 💨 Ultra-fast thanks to Rust backend via Tauri
+- 🔑 / Δ Detect **frame-optimized GIFs**: see which frames are keyframes and which are delta frames
+- ✨ **Pretty / 🧩 Raw view**: see a frame as it plays, or only the pixels it stores
+- ▶ **Play** the GIF with your edited delays before saving
+- ⏱️ Edit per-frame delays or set one delay for all frames
+- 🔄 Loop forever or a fixed number of plays
+- 💾 Save via native dialog, with unsaved-changes indicator and reset
+- ⌨️ Keyboard: ↑/↓ change frame, Space play/pause
+- 🌒 Light & dark theme
+- 💨 Ultra-fast thanks to the Rust backend via Tauri
 
 ![Rust](https://img.shields.io/badge/built_with-rust-orange)
 ![MadeWithTauri](https://img.shields.io/badge/ui-tauri-8d64c0?logo=tauri&logoColor=white)

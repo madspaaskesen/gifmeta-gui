@@ -1,7 +1,16 @@
+import { useEffect, useState } from "react";
+import { getVersion } from "@tauri-apps/api/app";
+
 export default function AboutTab() {
+  const [version, setVersion] = useState("");
+  useEffect(() => {
+    getVersion().then(setVersion).catch(() => {});
+  }, []);
+
   return (
     <div className="p-4 space-y-4 prose max-w-none">
-      <h2 className="text-xl font-bold">🦀 GIFmeta</h2>
+      <h2 className="text-xl font-bold">🦀 GIFmeta GUI {version && <span className="badge badge-outline align-middle">v{version}</span>}</h2>
+      <p className="text-sm opacity-70">Powered by the <a href="https://crates.io/crates/gifmeta" className="link">gifmeta</a> crate (0.5).</p>
       <p>
         <strong>GIFmeta</strong> is a small but powerful tool designed to let you view and modify GIF metadata — frame delays, loop counts, and more.
         It's built with care, beauty, and freedom in mind. No watermarks, no limitations, no ads.
@@ -15,7 +24,8 @@ export default function AboutTab() {
 
       <h3>🛠 Technology</h3>
       <ul>
-        <li>Tauri (Rust-based desktop engine)</li>
+        <li>Tauri 2 (Rust-based desktop engine)</li>
+        <li>gifmeta crate — metadata, keyframe detection, disposal-aware frame rendering</li>
         <li>React + Vite frontend</li>
         <li>TailwindCSS + DaisyUI</li>
       </ul>
