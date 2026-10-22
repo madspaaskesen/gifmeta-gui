@@ -83,12 +83,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli --force
+      #- name: Install Tauri CLI
+      #  run: cargo install tauri-cli --force
 
-      - name: Build frontend + Tauri app
-        run: cargo tauri build --target ${{ matrix.target }}
+      #- name: Build frontend + Tauri app
+      #  run: cargo tauri build --target ${{ matrix.target }}
       
+      - name: Build frontend + Tauri app
+        run: npm run tauri build -- --target ${{ matrix.target }}
+
       #- name: Build frontend
       #  run: npm run tauri build --target ${{ matrix.target }}
 
