@@ -23,6 +23,21 @@ button {
   outline: none;
 }
 
+/* Desktop-app feel: no accidental text selection in the UI chrome (⌘A, double-click),
+   but keep it where copying makes sense. */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+input,
+textarea,
+pre,
+.selectable {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #f6f6f6;

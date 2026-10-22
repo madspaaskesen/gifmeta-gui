@@ -80,10 +80,9 @@ What changes for the GUI:
   `src-tauri/icons/`). Use it in README, About tab and the header.
 
 ## 7. Known limitations / next ideas
-- ⬜ Playback preloads all frames first. Each frame is rendered from scratch by the crate
-  (frame *n* replays frames 0…n), so preloading is O(n²) — ~1 s for the 40-frame forge GIF, slow for
-  GIFs with hundreds of frames. Fix in the crate: `render_all_frames(path, mode)` / an iterator that
-  renders every frame in one pass (gifmeta 0.5.1), then a Tauri command that streams them.
+- ✅ Playback preload is now a single pass (0.2.1): Tauri command `get_all_frames` streams every frame
+  through a `Channel` using gifmeta 0.5.1's `FrameRenderer` (forge GIF ~15× faster, 150-frame GIF ~56×).
+  Falls back to per-frame `get_frame` if the command is unavailable.
 - ⬜ Frame images are cached as object URLs per `index:mode` (`src/lib/frameImages.js`) — memory grows
   with very large GIFs; could cap or use thumbnails.
 

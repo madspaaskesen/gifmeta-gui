@@ -1,7 +1,7 @@
 # gifmeta-gui (Tauri desktop app)
 
 Cross-platform desktop GUI for the `gifmeta` crate: open a GIF, browse frames, edit per-frame and
-global delay + loop count, save. Version 0.2.0. Tauri 2 + React 18 + Vite 6 + Tailwind 3 + DaisyUI 5.
+global delay + loop count, save. Version 0.2.1. Tauri 2 + React 18 + Vite 6 + Tailwind 3 + DaisyUI 5.
 Plain JavaScript/JSX (no TypeScript), no frontend tests.
 
 ## Commands
@@ -18,13 +18,14 @@ cd src-tauri && cargo build && cargo fmt -- --check   # what CI runs (Ubuntu 22.
 src-tauri/src/lib.rs     Tauri commands (async, work in spawn_blocking):
                            get_info(path) → GifMetadata (show_frames = true)
                            get_frame(path, frame, raw?) → tauri::ipc::Response (raw PNG bytes → ArrayBuffer in JS)
+                           get_all_frames(path, raw?, onFrame: Channel) → streams every frame (raw PNG) in order, returns count
                            save_modified_gif(inputPath, outputPath, loopInfinite?, loopCount?, delayAll?, delays?) → written path
-src-tauri/Cargo.toml     gifmeta = "0.5.0" from crates.io
+src-tauri/Cargo.toml     gifmeta = "0.5.1" from crates.io
 src-tauri/capabilities/  default.json + main.json (identical; dialog open/save + opener)
 src/GifMetaApp.jsx       all app state: file, original metadata, editable frames, loop, playback, keyboard,
                          drag & drop, save, toasts, tabs (controlled tabs, not radio inputs)
 src/lib/gif.js           pure helpers: durations, loop label, dirty check, buildSaveArgs()
-src/lib/frameImages.js   cache of rendered frames as object URLs ("index:mode"), preloadAll()
+src/lib/frameImages.js   cache of rendered frames as object URLs ("index:mode"), preloadAll() via get_all_frames stream
 src/components/FrameList.jsx    🔑/Δ + delay per frame, ● when edited, auto-scroll to selection
 src/components/FrameViewer.jsx  ◀ ▶ Play, Pretty/Raw toggle, delay input, frame badges, checkerboard
 src/components/SettingsTab.jsx  delay for all frames, ∞ loop toggle + plays count (min 1), theme
@@ -51,7 +52,9 @@ docs/GUI_PLAN.md         roadmap / status
 ## Gotchas
 - `loop_count` from the crate is user-facing: 0 = infinite (also `loop_infinite: true`), 1 = once, n = n times.
   The GUI never sends 0 — it sends `loopInfinite: true` instead.
-- Rendering frame n in the crate replays frames 0…n → preloading for playback is O(n²). See GUI_PLAN §7.
+- `get_frame` for frame n replays frames 0…n — fine for one frame, never loop it over all frames; use
+  `get_all_frames` (single pass, streamed through a Tauri `Channel`). Channel messages may arrive just after
+  the command resolves — `preloadAll` waits until all `count` frames are received.
 - Don't put image data into `frames`/metadata state (JSON tab renders it) — use the image cache.
 - Keyboard shortcuts are ignored while focus is in an input.
 - The capability files must allow every dialog used (`dialog:allow-open`, `dialog:allow-save`; `confirm` via `dialog:default`).

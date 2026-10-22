@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use gifmeta::{LoopMode, ModOptions, PreviewMode};
-use tauri::ipc::Response;
+use gifmeta::{FrameRenderer, LoopMode, ModOptions, PreviewMode};
+use tauri::ipc::{Channel, InvokeResponseBody, Response};
 
 /// Reads all metadata incl. per-frame info (rect, disposal, keyframe flag).
 #[tauri::command]
@@ -30,6 +30,37 @@ async fn get_frame(path: String, frame: usize, raw: Option<bool>) -> Result<Resp
     .await
     .map_err(|e| e.to_string())??;
     Ok(Response::new(bytes))
+}
+
+/// Renders **all** frames in one pass (gifmeta `FrameRenderer`) and streams each one as raw
+/// PNG bytes through `on_frame`, in order, as soon as it is ready. Returns the frame count.
+///
+/// Much faster than calling `get_frame` per frame (which replays the GIF from the start).
+#[tauri::command]
+async fn get_all_frames(
+    path: String,
+    raw: Option<bool>,
+    on_frame: Channel,
+) -> Result<usize, String> {
+    let mode = if raw.unwrap_or(false) {
+        PreviewMode::Raw
+    } else {
+        PreviewMode::Composited
+    };
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut count = 0;
+        for frame in FrameRenderer::open(&path, mode)? {
+            let frame = frame?;
+            let png = gifmeta::utils::extract_frame_as_png::encode_png(&frame.image)?;
+            on_frame
+                .send(InvokeResponseBody::Raw(png))
+                .map_err(|e| format!("Could not send frame {}: {e}", frame.index))?;
+            count += 1;
+        }
+        Ok(count)
+    })
+    .await
+    .map_err(|e| e.to_string())?
 }
 
 /// Writes the modified GIF and returns the path that was written.
@@ -73,6 +104,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_info,
             get_frame,
+            get_all_frames,
             save_modified_gif
         ])
         .run(tauri::generate_context!())
