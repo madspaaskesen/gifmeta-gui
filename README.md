@@ -81,6 +81,8 @@ Darkmode
 
 ## 🌐 Related Projects
 
+* 🔨 [Hardcore Websmith](https://hardcorewebsmith.com) — digital blacksmithing & Rust development, software à la carte
+* 🎬 [Flixlar](https://flixlar.com) — fast subtitle editing and export for video, offline speech-to-text, your videos stay on your computer
 * 🕊️ [Sacred-AI](https://sacred-ai.com) — gentle AI for emotional reflection
 * 📈 [MySiteChart](https://mysitechart.com) — website uptime + visit tracker
 * 🛠️ [MP-IT](https://mp-it.dk) — freelance & micro tool development
@@ -90,9 +92,12 @@ Darkmode
 
 ## 🙏 Created by
 
-Made with clarity and care by
-**[Mads Paaskesen](https://mp-it.dk)**
-💛 [@madspaaskesen](https://github.com/madspaaskesen) • [@Sacred-AI](https://github.com/Sacred-AI)
+Forged with clarity and care by
+**[🔨 HardcoreWebsmith](https://hardcorewebsmith.com)** — *forging digital solutions since 1993* · *[Mads Paaskesen](https://mp-it.dk)*
+
+---
+
+💛 [@madspaaskesen](https://github.com/madspaaskesen) • [HardcoreWebsmith.com](https://hardcorewebsmith.com) • [Flixlar.com](https://flixlar.com)
 
 ---
 
