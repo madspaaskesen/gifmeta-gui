@@ -1,4 +1,5 @@
-// Cache of rendered frame images as object URLs, keyed by "index:mode".
+// Cache of rendered frame images as object URLs, keyed by "index:mode" (frames of the opened
+// GIF) or "file:<path>" (image files inserted as frames).
 import { Channel, invoke } from "@tauri-apps/api/core";
 
 export function createFrameImageCache() {
@@ -11,6 +12,36 @@ export function createFrameImageCache() {
     urls.clear();
     pending.clear();
     path = newPath;
+  }
+
+  const MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif" };
+
+  /** Loads (or returns cached) object URL for an image file on disk. */
+  function loadFile(filePath) {
+    const key = `file:${filePath}`;
+    if (urls.has(key)) return Promise.resolve(urls.get(key));
+    if (pending.has(key)) return pending.get(key);
+    const ext = filePath.split(".").pop().toLowerCase();
+    const p = invoke("read_image", { path: filePath })
+      .then((buffer) => {
+        const url = URL.createObjectURL(new Blob([buffer], { type: MIME[ext] ?? "image/png" }));
+        urls.set(key, url);
+        return url;
+      })
+      .finally(() => pending.delete(key));
+    pending.set(key, p);
+    return p;
+  }
+
+  /** Cached URL for a frame item (frame of the GIF or image file), or undefined. */
+  function peekItem(item, mode = "pretty") {
+    if (!item) return undefined;
+    return item.kind === "image" ? urls.get(`file:${item.path}`) : peek(item.index, mode);
+  }
+
+  /** Loads the image for a frame item. Images look the same in pretty and raw mode. */
+  function loadItem(item, mode = "pretty") {
+    return item.kind === "image" ? loadFile(item.path) : load(item.index, mode);
   }
 
   /** Returns a cached URL synchronously, or undefined. */
@@ -90,5 +121,15 @@ export function createFrameImageCache() {
     if (forPath !== path) throw new Error("stale");
   }
 
-  return { clear, peek, load, preloadAll };
+  return { clear, peek, load, preloadAll, loadFile, peekItem, loadItem };
+}
+
+/** Natural size of an image URL → { width, height }. */
+export function imageSize(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => reject(new Error("Could not decode image"));
+    img.src = url;
+  });
 }

@@ -1,4 +1,4 @@
-export default function SaveTab({ metadata, outputPath, setOutputPath, onChoosePath, onSave, dirty, saving }) {
+export default function SaveTab({ metadata, isNew = false, frameCount = 0, outputPath, setOutputPath, onChoosePath, onSave, dirty, saving }) {
   return (
     <div className="p-2 space-y-4 max-w-2xl">
       <fieldset className="fieldset w-full">
@@ -20,11 +20,17 @@ export default function SaveTab({ metadata, outputPath, setOutputPath, onChooseP
 
       <div className="flex items-center gap-3">
         <button className="btn btn-primary" onClick={onSave} disabled={!metadata || !dirty || saving}>
-          {saving ? <span className="loading loading-spinner loading-sm" /> : "💾"} Save modified GIF
+          {saving ? <span className="loading loading-spinner loading-sm" /> : "💾"} {isNew ? "Create GIF" : "Save modified GIF"}
         </button>
         {metadata && (
           <span className="text-sm opacity-70">
-            {dirty ? "● You have unsaved changes" : "No changes yet — edit delays or the loop setting first."}
+            {isNew
+              ? frameCount < 2
+                ? "Add at least 2 images to make an animated GIF."
+                : `New GIF from ${frameCount} images — it opens for further editing after saving.`
+              : dirty
+                ? "● You have unsaved changes"
+                : "No changes yet — edit delays, frames or the loop setting first."}
           </span>
         )}
       </div>

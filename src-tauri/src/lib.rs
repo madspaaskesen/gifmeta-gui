@@ -1,8 +1,24 @@
+mod plan;
+
 use std::collections::HashMap;
 use std::path::PathBuf;
 
 use gifmeta::{DeleteMode, FrameRenderer, LoopMode, ModOptions, PreviewMode};
+use plan::{PlanItem, PlanSettings, SaveReport};
 use tauri::ipc::{Channel, InvokeResponseBody, Response};
+
+/// `loop_infinite = true` → forever (wins), `loop_count = n ≥ 1` → n plays, neither → keep.
+fn loop_mode(
+    loop_infinite: Option<bool>,
+    loop_count: Option<u16>,
+) -> Result<Option<LoopMode>, String> {
+    match (loop_infinite.unwrap_or(false), loop_count) {
+        (true, _) => Ok(Some(LoopMode::Infinite)),
+        (false, Some(0)) => Err("Loop count must be at least 1".into()),
+        (false, Some(n)) => Ok(Some(LoopMode::Times(n))),
+        (false, None) => Ok(None),
+    }
+}
 
 /// Reads all metadata incl. per-frame info (rect, disposal, keyframe flag).
 #[tauri::command]
@@ -63,18 +79,6 @@ async fn get_all_frames(
     .map_err(|e| e.to_string())?
 }
 
-/// What `save_modified_gif` did (sent back to the UI).
-#[derive(serde::Serialize)]
-struct SaveReport {
-    output: String,
-    frames_in: usize,
-    frames_out: usize,
-    deleted: Vec<usize>,
-    rekeyed: Vec<usize>,
-    quantized: Vec<usize>,
-    warnings: Vec<String>,
-}
-
 /// Writes the modified GIF and returns a report.
 ///
 /// * `loop_infinite = true` → loop forever (wins over `loop_count`)
@@ -96,12 +100,7 @@ async fn save_modified_gif(
     unoptimize: Option<bool>,
     delete_mode: Option<String>,
 ) -> Result<SaveReport, String> {
-    let loop_mode = match (loop_infinite.unwrap_or(false), loop_count) {
-        (true, _) => Some(LoopMode::Infinite),
-        (false, Some(0)) => return Err("Loop count must be at least 1".into()),
-        (false, Some(n)) => Some(LoopMode::Times(n)),
-        (false, None) => None,
-    };
+    let loop_mode = loop_mode(loop_infinite, loop_count)?;
     let opts = ModOptions {
         output: output_path.map(PathBuf::from),
         loop_mode,
@@ -121,15 +120,81 @@ async fn save_modified_gif(
         tauri::async_runtime::spawn_blocking(move || gifmeta::modify_gif_with_report(&input, opts))
             .await
             .map_err(|e| e.to_string())??;
-    Ok(SaveReport {
-        output: r.output.display().to_string(),
-        frames_in: r.frames_in,
-        frames_out: r.frames_out,
-        warnings: r.warnings(),
-        deleted: r.deleted,
-        rekeyed: r.rekeyed,
-        quantized: r.quantized,
+    Ok(r.into())
+}
+
+/// Saves an edited frame list: frames of the input GIF and/or inserted images, in any order,
+/// with one delay each (`plan = [{ frame: 3, delay: 10 }, { image: "/x.png", delay: 50 }, …]`).
+/// Frames not in the plan are deleted; frames listed twice are duplicated.
+/// `keyframes` are ORIGINAL indices.
+#[tauri::command]
+async fn save_gif_plan(
+    input_path: String,
+    output_path: String,
+    plan: Vec<PlanItem>,
+    loop_infinite: Option<bool>,
+    loop_count: Option<u16>,
+    keyframes: Option<Vec<usize>>,
+    unoptimize: Option<bool>,
+) -> Result<SaveReport, String> {
+    let settings = PlanSettings {
+        loop_mode: loop_mode(loop_infinite, loop_count)?,
+        keyframes: keyframes.unwrap_or_default(),
+        unoptimize: unoptimize.unwrap_or(false),
+    };
+    tauri::async_runtime::spawn_blocking(move || {
+        plan::save_plan(
+            &PathBuf::from(input_path),
+            &PathBuf::from(output_path),
+            &plan,
+            &settings,
+        )
     })
+    .await
+    .map_err(|e| e.to_string())?
+}
+
+/// Creates a new GIF from image files (PNG/JPEG/WebP, same size), one delay per image.
+#[tauri::command]
+async fn create_gif_from_images(
+    images: Vec<String>,
+    delays: Vec<u16>,
+    output_path: String,
+    loop_infinite: Option<bool>,
+    loop_count: Option<u16>,
+) -> Result<SaveReport, String> {
+    if images.len() != delays.len() {
+        return Err("Need one delay per image".into());
+    }
+    let loop_mode = loop_mode(loop_infinite, loop_count)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        plan::create_from_images(&images, &delays, &PathBuf::from(output_path), loop_mode)
+    })
+    .await
+    .map_err(|e| e.to_string())?
+}
+
+/// Reads an image file (PNG/JPEG/WebP/GIF) the user picked, as raw bytes for a preview.
+#[tauri::command]
+async fn read_image(path: String) -> Result<Response, String> {
+    let ok = PathBuf::from(&path)
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(|e| {
+            matches!(
+                e.to_ascii_lowercase().as_str(),
+                "png" | "jpg" | "jpeg" | "webp" | "gif"
+            )
+        })
+        .unwrap_or(false);
+    if !ok {
+        return Err("Only PNG, JPEG, WebP or GIF images can be added".into());
+    }
+    let bytes = tauri::async_runtime::spawn_blocking(move || std::fs::read(&path))
+        .await
+        .map_err(|e| e.to_string())?
+        .map_err(|e| format!("Could not read image: {e}"))?;
+    Ok(Response::new(bytes))
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -141,7 +206,10 @@ pub fn run() {
             get_info,
             get_frame,
             get_all_frames,
-            save_modified_gif
+            save_modified_gif,
+            save_gif_plan,
+            create_gif_from_images,
+            read_image
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

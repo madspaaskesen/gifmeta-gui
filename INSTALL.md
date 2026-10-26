@@ -8,22 +8,21 @@ Download the file for your platform from the
 1. **Double-click** the `.msi` installer and follow the steps.
 2. Start **GIFmeta** from the Start menu.
 
-> If SmartScreen warns you, click **"More info" → "Run anyway"**.
-> This is normal for new indie apps while they build up reputation. ✨
+> The installer is signed (publisher: Mads Paaskesen). If SmartScreen still warns you while the app
+> builds up reputation, click **"More info" → "Run anyway"**. ✨
 
 ---
 
-### 🍏 macOS — `GIFmeta_<version>_x64.dmg`
+### 🍏 macOS — `GIFmeta_<version>_aarch64.dmg` (Apple Silicon) or `GIFmeta_<version>_x64.dmg` (Intel)
 
-1. Open the `.dmg` and drag **GIFmeta** into **Applications**.
-2. Start it from Applications / Launchpad.
+1. Pick **aarch64** for M1/M2/M3/M4 Macs, **x64** for Intel Macs ( → About This Mac).
+2. Open the `.dmg` and drag **GIFmeta** into **Applications**.
+3. Start it from Applications / Launchpad.
 
-> If macOS says the app is from an "unidentified developer", open
-> **System Settings → Privacy & Security → Open Anyway**, then relaunch it.
-> Or in Terminal: `xattr -d com.apple.quarantine /Applications/GIFmeta.app`
->
-> The current build is for Intel (x64) and runs on Apple Silicon via Rosetta.
-> Signed + notarized builds (and a native Apple Silicon build) are planned.
+> From v0.4.0 the macOS builds are signed and notarized by Apple, so they open without warnings.
+> Older builds: if macOS says the app is from an "unidentified developer", open
+> **System Settings → Privacy & Security → Open Anyway**, or in Terminal:
+> `xattr -d com.apple.quarantine /Applications/GIFmeta.app`
 
 ---
 

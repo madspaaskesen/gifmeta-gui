@@ -26,6 +26,7 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 ## 🚀 Features
 
 - 📁 Open GIF files via native dialog — or drag & drop onto the window
+- 🎬 **New GIF from images**: pick or drop PNG / JPEG / WebP files, arrange them, set delays and loop, save
 - 🧠 Inspect metadata: dimensions, frames, loop count, transparency, etc.
 - 🔑 / Δ Detect **frame-optimized GIFs**: see which frames are keyframes and which are delta frames
 - ✨ **Pretty / 🧩 Raw view**: see a frame as it plays, or only the pixels it stores
@@ -33,9 +34,11 @@ Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.o
 - ⏱️ Edit per-frame delays or set one delay for all frames
 - 🗑️ **Delete frames** safely (⌫) — frames that depended on them are rebuilt automatically, the delay moves to the previous frame
 - 🔑 **Convert frames to full images**, or 🧱 **unoptimize** the whole GIF
+- ➕ **Insert images** as new frames (button, `I`, or drop image files onto the window)
+- 📑 **Duplicate frames** (`D`) and 🔀 **re-order** them by dragging (⠿) or with Alt+↑/↓ — safe even in frame-optimized GIFs
 - 🔄 Loop forever or a fixed number of plays
-- 💾 Save via native dialog, with unsaved-changes indicator and reset
-- ⌨️ Keyboard: ↑/↓ change frame, Space play/pause, ⌫ delete/restore frame
+- 💾 Save via native dialog, with unsaved-changes indicator, ↺ reset and ✕ close (start over)
+- ⌨️ Keyboard: ↑/↓ change frame, Alt+↑/↓ move frame, Space play/pause, ⌫ delete/restore, D duplicate, I insert image
 - 🌒 Light & dark theme
 - 💨 Ultra-fast thanks to the Rust backend via Tauri
 

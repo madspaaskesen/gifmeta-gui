@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function SettingsTab({ metadata, defaultDelay, onApplyDelayToAll, loop, setLoop, edits, setEdits }) {
+export default function SettingsTab({ metadata, isNew = false, defaultDelay, onApplyDelayToAll, loop, setLoop, edits, setEdits }) {
   const [delay, setDelay] = useState(defaultDelay);
   useEffect(() => setDelay(defaultDelay), [defaultDelay]);
 
@@ -61,8 +61,8 @@ export default function SettingsTab({ metadata, defaultDelay, onApplyDelayToAll,
         </label>
       </fieldset>
 
-      <fieldset className="fieldset">
-        <legend className="fieldset-legend">Frame editing</legend>
+      <fieldset className="fieldset" disabled={isNew}>
+        <legend className="fieldset-legend">Frame editing{isNew ? " (for existing GIFs)" : ""}</legend>
         <label className="label cursor-pointer justify-start gap-2">
           <input
             type="checkbox"

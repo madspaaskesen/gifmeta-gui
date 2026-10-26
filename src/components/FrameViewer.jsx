@@ -11,6 +11,8 @@ const DISPOSAL_HELP = {
 export default function FrameViewer({
   metadata,
   frame,
+  position,
+  count,
   imageUrl,
   mode,
   setMode,
@@ -22,17 +24,23 @@ export default function FrameViewer({
   preload,
   onToggleDelete,
   onToggleRekey,
+  onDuplicate,
+  onMoveUp,
+  onMoveDown,
+  onInsertImages,
   canDelete = true,
   unoptimize = false,
 }) {
   if (!metadata || !frame) {
     return (
       <div className="text-center opacity-60 italic p-4">
-        {metadata ? "Select a frame…" : "Open a GIF to get started…"}
+        {metadata ? "Select a frame…" : "Open a GIF, make a new one from images, or drop files onto the window…"}
       </div>
     );
   }
 
+  const isImage = frame.kind === "image";
+  const removable = isImage || frame.copy; // copies and images are removed, not flagged
   const fullCanvas =
     frame.left === 0 &&
     frame.top === 0 &&
@@ -50,7 +58,7 @@ export default function FrameViewer({
           <button
             className={`btn btn-sm join-item ${playing ? "btn-warning" : "btn-primary"}`}
             onClick={onTogglePlay}
-            title="Play with the current (edited) delays (Space)"
+            title="Play with the current edits (Space)"
           >
             {playing ? "⏸ Pause" : "▶ Play"}
           </button>
@@ -69,7 +77,7 @@ export default function FrameViewer({
           <button
             className={`btn btn-sm join-item ${mode === "raw" ? "btn-active" : ""}`}
             onClick={() => setMode("raw")}
-            disabled={playing}
+            disabled={playing || isImage}
           >
             🧩 Raw
           </button>
@@ -89,40 +97,76 @@ export default function FrameViewer({
         </label>
       </div>
 
+      {/* Arrange */}
+      <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+        <div className="join">
+          <button className="btn btn-sm join-item" onClick={onMoveUp} disabled={playing || position === 0} title="Move up (Alt+↑)">
+            ⬆
+          </button>
+          <button
+            className="btn btn-sm join-item"
+            onClick={onMoveDown}
+            disabled={playing || position >= count - 1}
+            title="Move down (Alt+↓)"
+          >
+            ⬇
+          </button>
+        </div>
+        <button className="btn btn-sm" onClick={onDuplicate} disabled={playing} title="Copy this frame, the copy goes right after it (D)">
+          📑 Duplicate
+        </button>
+        <button className="btn btn-sm" onClick={onInsertImages} disabled={playing} title="Insert image files after this frame (I)">
+          ➕ Insert image…
+        </button>
+      </div>
+
       {/* Frame edits */}
       <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-        <label
-          className={`label cursor-pointer gap-2 ${!canDelete && !frame.deleted ? "opacity-50" : ""}`}
-          title={canDelete || frame.deleted ? "Delete this frame when saving (⌫)" : "At least one frame must remain"}
-        >
-          <input
-            type="checkbox"
-            className="toggle toggle-sm toggle-error"
-            checked={!!frame.deleted}
-            disabled={playing || (!canDelete && !frame.deleted)}
-            onChange={onToggleDelete}
-          />
-          <span>🗑️ Delete frame</span>
-        </label>
-        <label
-          className={`label cursor-pointer gap-2 ${frame.is_keyframe || frame.deleted || unoptimize ? "opacity-50" : ""}`}
-          title={
-            unoptimize
-              ? "Unoptimize is on — every frame becomes a full image"
-              : frame.is_keyframe
-                ? "Already a full image"
-                : "Write this frame as a full image when saving"
-          }
-        >
-          <input
-            type="checkbox"
-            className="toggle toggle-sm toggle-success"
-            checked={!!frame.rekey || (unoptimize && !frame.deleted)}
-            disabled={playing || frame.is_keyframe || frame.deleted || unoptimize}
-            onChange={onToggleRekey}
-          />
-          <span>🔑 Convert to full image</span>
-        </label>
+        {removable ? (
+          <button
+            className="btn btn-sm btn-error btn-outline"
+            onClick={onToggleDelete}
+            disabled={playing || !canDelete}
+            title={canDelete ? "Remove this frame (⌫)" : "At least one frame must remain"}
+          >
+            🗑️ Remove {isImage ? "image" : "copy"}
+          </button>
+        ) : (
+          <label
+            className={`label cursor-pointer gap-2 ${!canDelete && !frame.deleted ? "opacity-50" : ""}`}
+            title={canDelete || frame.deleted ? "Delete this frame when saving (⌫)" : "At least one frame must remain"}
+          >
+            <input
+              type="checkbox"
+              className="toggle toggle-sm toggle-error"
+              checked={!!frame.deleted}
+              disabled={playing || (!canDelete && !frame.deleted)}
+              onChange={onToggleDelete}
+            />
+            <span>🗑️ Delete frame</span>
+          </label>
+        )}
+        {!isImage && (
+          <label
+            className={`label cursor-pointer gap-2 ${frame.is_keyframe || frame.deleted || unoptimize ? "opacity-50" : ""}`}
+            title={
+              unoptimize
+                ? "Unoptimize is on — every frame becomes a full image"
+                : frame.is_keyframe
+                  ? "Already a full image"
+                  : "Write this frame as a full image when saving"
+            }
+          >
+            <input
+              type="checkbox"
+              className="toggle toggle-sm toggle-success"
+              checked={!!frame.rekey || (unoptimize && !frame.deleted)}
+              disabled={playing || frame.is_keyframe || frame.deleted || unoptimize}
+              onChange={onToggleRekey}
+            />
+            <span>🔑 Convert to full image</span>
+          </label>
+        )}
       </div>
 
       {preload && (
@@ -134,29 +178,45 @@ export default function FrameViewer({
 
       {/* Frame info */}
       <div className="flex flex-wrap justify-center gap-2 text-xs">
-        <span className="badge badge-outline">
-          Frame {frame.index} / {metadata.frame_count - 1}
+        <span className="badge badge-outline" title="Position in the result">
+          #{position + 1} / {count}
         </span>
-        {frame.deleted && <span className="badge badge-error">🗑️ Will be deleted</span>}
-        {!frame.deleted && !frame.is_keyframe && (frame.rekey || unoptimize) && (
-          <span className="badge badge-success badge-outline">→ 🔑 full image on save</span>
+        {isImage ? (
+          <>
+            <span className="badge badge-secondary" title={frame.path}>
+              🖼️ {frame.name}
+            </span>
+            <span className="badge badge-outline">
+              {frame.width}×{frame.height}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="badge badge-outline">
+              {frame.copy ? "📑 Copy of frame" : "Frame"} {frame.index} / {metadata.frame_count - 1}
+            </span>
+            {frame.deleted && <span className="badge badge-error">🗑️ Will be deleted</span>}
+            {!frame.deleted && !frame.is_keyframe && (frame.rekey || unoptimize) && (
+              <span className="badge badge-success badge-outline">→ 🔑 full image on save</span>
+            )}
+            <span
+              className={`badge ${frame.is_keyframe ? "badge-success" : "badge-warning"}`}
+              title={
+                frame.is_keyframe
+                  ? "A full image on its own — safe to edit"
+                  : "Only stores changes on top of earlier frames — gifmeta re-writes it as a full image if needed"
+              }
+            >
+              {frame.is_keyframe ? "🔑 Keyframe" : "Δ Delta frame"}
+            </span>
+            <span className="badge badge-outline" title={fullCanvas ? "Covers the whole canvas" : "Sub-rectangle of the canvas"}>
+              {frame.left},{frame.top} · {frame.width}×{frame.height}
+            </span>
+            <span className="badge badge-outline" title={DISPOSAL_HELP[frame.disposal]}>
+              dispose: {frame.disposal}
+            </span>
+          </>
         )}
-        <span
-          className={`badge ${frame.is_keyframe ? "badge-success" : "badge-warning"}`}
-          title={
-            frame.is_keyframe
-              ? "A full image on its own — safe to edit"
-              : "Only stores changes on top of earlier frames"
-          }
-        >
-          {frame.is_keyframe ? "🔑 Keyframe" : "Δ Delta frame"}
-        </span>
-        <span className="badge badge-outline" title={fullCanvas ? "Covers the whole canvas" : "Sub-rectangle of the canvas"}>
-          {frame.left},{frame.top} · {frame.width}×{frame.height}
-        </span>
-        <span className="badge badge-outline" title={DISPOSAL_HELP[frame.disposal]}>
-          dispose: {frame.disposal}
-        </span>
         {frame.delay_cs < 2 && (
           <span className="badge badge-ghost" title="Browsers show delays below 2 cs as 10 cs">
             plays as {playbackDelayMs(frame.delay_cs)} ms
@@ -169,7 +229,7 @@ export default function FrameViewer({
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt={`Frame ${frame.index} (${mode})`}
+            alt={isImage ? frame.name : `Frame ${frame.index} (${mode})`}
             className="block max-w-full h-auto"
             style={{ imageRendering: "pixelated" }}
             width={metadata.width}
@@ -185,10 +245,15 @@ export default function FrameViewer({
         )}
       </div>
 
-      {mode === "raw" && !frame.is_keyframe && (
+      {mode === "raw" && !isImage && !frame.is_keyframe && (
         <p className="text-xs opacity-70 max-w-md text-center">
           Raw view: only the pixels this delta frame stores. The checkerboard shows through where it
           reuses pixels from earlier frames.
+        </p>
+      )}
+      {isImage && (
+        <p className="text-xs opacity-70 max-w-md text-center">
+          Saved as a full frame. Fully transparent pixels stay transparent; semi-transparent pixels are drawn opaque.
         </p>
       )}
     </div>

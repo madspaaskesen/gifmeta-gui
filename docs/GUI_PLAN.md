@@ -3,7 +3,12 @@
 Living plan for the desktop app. Status: ⬜ todo · 🟨 in progress · ✅ done
 Crate-side plan (frames, delete, re-key): `../gifmeta/docs/FRAME_EDITING_PLAN.md`
 
-**gifmeta-gui 0.2.0** (2026-10-22, unreleased): sections 1 + 2, section 3 items 1, 2, 4, 5 and parts of 4/5 ✅.
+**gifmeta-gui 0.4.0** (2026-10-26): section 9 — create GIFs from images, insert / duplicate / re-order frames (gifmeta 0.7.0).
+Tested in a browser with Playwright + mocked Tauri IPC (open → duplicate → insert → move → drag → delete → play →
+save plan → new from images → create → reopen; no console errors). The exact plan the UI sends was saved with the
+real backend on the optimized test GIF: all 6 frames pixel-identical.
+
+**gifmeta-gui 0.2.0** (2026-10-22): sections 1 + 2, section 3 items 1, 2, 4, 5 and parts of 4/5 ✅.
 Tested in a browser with Playwright + mocked Tauri IPC on the 40-frame forge GIF (no console errors);
 `cargo check` of `src-tauri` against gifmeta 0.5.0 is clean.
 
@@ -86,6 +91,29 @@ What changes for the GUI:
   Falls back to per-frame `get_frame` if the command is unavailable.
 - ⬜ Frame images are cached as object URLs per `index:mode` (`src/lib/frameImages.js`) — memory grows
   with very large GIFs; could cap or use thumbnails.
+
+## 9. Create & arrange frames ✅ (0.4.0, gifmeta 0.7.0)
+- ✅ Frame list = **items**: GIF frames, copies (📑 `copy` badge) and inserted images (🖼️ `new` badge).
+- ✅ **➕ Insert image…** (button in viewer + list header, `I`, or drop PNG/JPEG/WebP onto the window) — inserted
+  after the selected frame; wrong-size images are skipped with one clear message.
+- ✅ **📑 Duplicate** (`D`) — copy right after the frame. Copies and images are removed with ⌫ (originals are flagged).
+- ✅ **🔀 Re-order**: drag the ⠿ handle (pointer events — HTML5 DnD is broken on Windows with Tauri's file drop),
+  ⬆/⬇ buttons, Alt+↑/↓.
+- ✅ **🎬 New from images**: pick or drop images → arrange → delays / loop → **Create GIF**; the new file then opens
+  as a normal GIF for further editing.
+- ✅ Backend `save_gif_plan` (`src-tauri/src/plan.rs`): crate `--order` can't be combined with delete/insert/duplicate,
+  so pass 1 builds (delete, duplicate, append images, re-key, loop) and pass 2 orders + sets every delay.
+  Lossless wherever possible; frames that lost their neighbour are re-written as full images.
+- ✅ Header 💾 Save / Create GIF opens the Save tab first (so the output path and the spinner are visible); clicking it
+  again while the Save tab is active saves.
+- ✅ "Unsaved changes" confirmation is now an in-app dialog (Enter = Discard, Esc = Cancel) — the native confirm
+  never confirmed on macOS, so ✕ Close / Open did nothing for an unsaved new GIF.
+- ✅ **✕ Close** (back to the start screen, asks when unsaved) and **↺ Reset** also for a new GIF (back to the
+  images as picked).
+- ✅ Fixed: the window drag-drop listener leaked when the effect was cleaned up before registration (React StrictMode
+  in dev) → drops were handled twice.
+- ⬜ Next: thumbnails in the list (section 3.3), multi-select (move / delete / delay several frames), undo/redo,
+  fit/pad images of another size (needs crate support).
 
 ## 8. Later
 - ⬜ macOS signing + notarization (needs Apple Developer account) → no more `xattr` quarantine step.

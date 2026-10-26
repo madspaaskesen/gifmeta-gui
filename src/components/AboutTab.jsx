@@ -10,7 +10,7 @@ export default function AboutTab() {
   return (
     <div className="p-4 space-y-4 prose max-w-none">
       <h2 className="text-xl font-bold">🦀 GIFmeta GUI {version && <span className="badge badge-outline align-middle">v{version}</span>}</h2>
-      <p className="text-sm opacity-70">Powered by the <a href="https://crates.io/crates/gifmeta" className="link">gifmeta</a> crate (0.5).</p>
+      <p className="text-sm opacity-70">Powered by the <a href="https://crates.io/crates/gifmeta" className="link">gifmeta</a> crate (0.7).</p>
       <p>
         <strong>GIFmeta</strong> is a small but powerful tool designed to let you view and modify GIF metadata — frame delays, loop counts, and more.
         It's built with care, beauty, and freedom in mind. No watermarks, no limitations, no ads.
