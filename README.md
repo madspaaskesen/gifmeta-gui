@@ -15,7 +15,7 @@
 Built with love using [Tauri](https://tauri.app), [Rust](https://www.rust-lang.org/), and [React](https://react.dev/).
 
 > Edit loop counts and frame delays, play your changes before saving, and see how frame-optimized GIFs are built — all in a clean native GUI.  
-> Powered by the [gifmeta](https://crates.io/crates/gifmeta) Rust crate.
+> Powered by the [gifmeta](https://crates.io/crates/gifmeta) Rust crate. Website: [gifmeta.com](https://gifmeta.com)
 
 <p align="center">
   <a href="https://github.com/madspaaskesen/gifmeta-gui/releases/latest"><b>📥 Download for macOS · Windows · Linux</b></a>
