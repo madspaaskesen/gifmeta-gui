@@ -4,7 +4,7 @@
 #   .\scripts\sign-windows.ps1 -Tag v0.4.0
 #
 # Before running: SimplySign Desktop connected (token from the mobile app), GitHub CLI logged in
-# (gh auth login). Thumbprint: see flixlar-caption-editor/docs/codesigning — it changes on renewal.
+# (gh auth login). Thumbprint: see flixlar-caption-editor/docs/codesigning - it changes on renewal.
 param(
   [Parameter(Mandatory = $true)][string]$Tag,
   [string]$Thumbprint = $env:CERTUM_THUMBPRINT,
@@ -14,20 +14,20 @@ param(
 $ErrorActionPreference = "Stop"
 if (-not $Thumbprint) { throw "Pass -Thumbprint or set CERTUM_THUMBPRINT" }
 
-# CI uploads files with the same names — wait until the release build is done.
+# CI uploads files with the same names - wait until the release build is done.
 $ciStatus = gh run list --repo $Repo --workflow release.yml --limit 1 --json status -q ".[0].status"
-if ($ciStatus -ne "completed") { throw "The release workflow is '$ciStatus' — wait until it is done" }
+if ($ciStatus -ne "completed") { throw "The release workflow is '$ciStatus' - wait until it is done" }
 
 $dir = Join-Path $env:TEMP "gifmeta-sign-$Tag"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
 gh release download $Tag --repo $Repo --pattern "*.msi" --dir $dir --clobber
 
 foreach ($msi in Get-ChildItem $dir -Filter *.msi) {
-  Write-Host "🔏 Signing $($msi.Name)"
+  Write-Host "Signing $($msi.Name)"
   & $SignTool sign /sha1 $Thumbprint /tr http://time.certum.pl /td sha256 /fd sha256 /v $msi.FullName
   if ($LASTEXITCODE) { throw "signtool sign failed" }
   & $SignTool verify /pa /all $msi.FullName
   if ($LASTEXITCODE) { throw "signtool verify failed" }
   gh release upload $Tag $msi.FullName --repo $Repo --clobber
 }
-Write-Host "✅ Signed and uploaded to $Tag"
+Write-Host "Signed and uploaded to $Tag"
